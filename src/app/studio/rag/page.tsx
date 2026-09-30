@@ -299,7 +299,7 @@ export default function DocumentRagPage() {
       // Record to global telemetry drawer
       addTrace({
         studio: "Hybrid Document RAG",
-        model: "gemini-2.5-flash + text-embedding-004",
+        model: "gemini-3.6-flash + text-embedding-004",
         latencyMs,
         ttftMs: Math.round(latencyMs * 0.35),
         promptTokens,
@@ -333,7 +333,7 @@ export default function DocumentRagPage() {
 
       addTrace({
         studio: "Hybrid Document RAG",
-        model: "gemini-2.5-flash",
+        model: "gemini-3.6-flash",
         latencyMs,
         promptTokens: estimateTokens(textToSend),
         completionTokens: 0,

@@ -41,7 +41,7 @@ export default function HomePage() {
       gradient: "from-indigo-600 to-blue-500",
       shadow: "shadow-indigo-500/20",
       href: "/studio/article",
-      tag: "Gemini 2.5 Flash",
+      tag: "Gemini 3.6 Flash",
     },
     {
       title: "Canvas Inpainting Studio",

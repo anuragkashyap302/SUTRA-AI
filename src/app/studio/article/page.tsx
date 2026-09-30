@@ -4,17 +4,12 @@ import { useState, useRef, useEffect } from "react";
 import {
   PenTool,
   SlidersHorizontal,
-  Send,
   Copy,
   Check,
   Download,
   Printer,
   FileText,
   Table as TableIcon,
-  Globe,
-  Search,
-  CheckCheck,
-  Maximize2,
   Edit3,
   Eye,
   Loader2,
@@ -33,12 +28,12 @@ import { useTelemetry } from "@/context/TelemetryContext";
 import { estimateTokens } from "@/lib/telemetry";
 
 const TONE_OPTIONS = [
-  { id: "Professional", label: "💼 Professional", desc: "Crisp & authoritative" },
-  { id: "Persuasive", label: "⚡ Persuasive", desc: "Compelling & action-driven" },
-  { id: "Casual", label: "☕ Casual", desc: "Approachable & conversational" },
-  { id: "Academic", label: "🎓 Academic", desc: "Rigorous & analytical" },
-  { id: "Storytelling", label: "📖 Storytelling", desc: "Narrative & engaging" },
-  { id: "Viral", label: "🚀 Viral", desc: "High-hook & shareable" },
+  { id: "Professional", label: "Professional", desc: "Crisp & authoritative" },
+  { id: "Persuasive", label: "Persuasive", desc: "Compelling & action-driven" },
+  { id: "Casual", label: "Casual", desc: "Approachable & conversational" },
+  { id: "Academic", label: "Academic", desc: "Rigorous & analytical" },
+  { id: "Storytelling", label: "Storytelling", desc: "Narrative & engaging" },
+  { id: "Viral", label: "Viral", desc: "High-hook & shareable" },
 ];
 
 const AUDIENCE_OPTIONS = [
@@ -80,7 +75,7 @@ export default function ArticleStudioPage() {
       if (remixPrompt) {
         setPrompt(remixPrompt);
         if (remixTitle) setTitle(remixTitle);
-        toast.success("✨ Remixed prompt loaded from Community!");
+        toast.success("Remixed prompt loaded from Community!");
       }
     }
   }, []);
@@ -119,9 +114,27 @@ export default function ArticleStudioPage() {
         }),
       });
 
-      const json = await res.json();
-      if (!res.ok || !json.success) {
-        throw new Error(json.error || "Failed to generate article");
+      let json: any = null;
+      const contentType = res.headers.get("content-type") || "";
+      if (contentType.includes("application/json")) {
+        json = await res.json();
+      } else {
+        throw new Error(
+          res.status === 401
+            ? "Unauthorized: Please sign in to generate articles."
+            : "Server returned a non-JSON response. Please try again."
+        );
+      }
+
+      if (!res.ok || !json?.success) {
+        if (res.status === 401) {
+          toast.error("Please sign in to generate articles!");
+          setTimeout(() => {
+            window.location.href = "/sign-in?redirect_url=" + encodeURIComponent(window.location.pathname);
+          }, 1200);
+          return;
+        }
+        throw new Error(json?.error || "Failed to generate article");
       }
 
       const latencyMs = Math.round(performance.now() - startTime);
@@ -132,7 +145,7 @@ export default function ArticleStudioPage() {
       // Record Telemetry
       addTrace({
         studio: "Article Studio",
-        model: "gemini-2.5-flash",
+        model: "gemini-3.6-flash",
         latencyMs,
         ttftMs: Math.round(latencyMs * 0.25),
         promptTokens,
@@ -158,7 +171,7 @@ export default function ArticleStudioPage() {
 
       addTrace({
         studio: "Article Studio",
-        model: "gemini-2.5-flash",
+        model: "gemini-3.6-flash",
         latencyMs,
         promptTokens: estimateTokens(prompt),
         completionTokens: 0,
@@ -191,9 +204,27 @@ export default function ArticleStudioPage() {
         }),
       });
 
-      const json = await res.json();
-      if (!res.ok || !json.success) {
-        throw new Error(json.error || "Refactor failed");
+      let json: any = null;
+      const contentType = res.headers.get("content-type") || "";
+      if (contentType.includes("application/json")) {
+        json = await res.json();
+      } else {
+        throw new Error(
+          res.status === 401
+            ? "Unauthorized: Please sign in to refactor articles."
+            : "Server returned a non-JSON response. Please try again."
+        );
+      }
+
+      if (!res.ok || !json?.success) {
+        if (res.status === 401) {
+          toast.error("Please sign in to continue!");
+          setTimeout(() => {
+            window.location.href = "/sign-in?redirect_url=" + encodeURIComponent(window.location.pathname);
+          }, 1200);
+          return;
+        }
+        throw new Error(json?.error || "Refactor failed");
       }
 
       const latencyMs = Math.round(performance.now() - startTime);
@@ -203,7 +234,7 @@ export default function ArticleStudioPage() {
 
       addTrace({
         studio: "Article Studio (Refactor)",
-        model: "gemini-2.5-flash",
+        model: "gemini-3.6-flash",
         latencyMs,
         ttftMs: Math.round(latencyMs * 0.2),
         promptTokens,
@@ -226,7 +257,7 @@ export default function ArticleStudioPage() {
 
       addTrace({
         studio: "Article Studio (Refactor)",
-        model: "gemini-2.5-flash",
+        model: "gemini-3.6-flash",
         latencyMs,
         promptTokens: estimateTokens(generatedArticle),
         completionTokens: 0,
@@ -353,8 +384,9 @@ export default function ArticleStudioPage() {
                 <SlidersHorizontal className="w-4 h-4 text-indigo-600" />
                 Article Parameters & Style
               </h2>
-              <span className="px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-[11px] text-indigo-700 font-mono font-bold">
-                ⚡ 1 Credit
+              <span className="px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-[11px] text-indigo-700 font-mono font-bold inline-flex items-center gap-1.5 shadow-2xs">
+                <Zap className="w-3 h-3 text-indigo-600 fill-indigo-600/30" />
+                1 Credit
               </span>
             </div>
 
@@ -399,14 +431,13 @@ export default function ArticleStudioPage() {
                       type="button"
                       key={t.id}
                       onClick={() => setTone(t.id)}
-                      className={`p-2.5 rounded-2xl text-left border-2 transition-all cursor-pointer ${
-                        tone === t.id
-                          ? "bg-indigo-50 border-indigo-600 text-indigo-950 shadow-sm scale-105"
-                          : "bg-white border-indigo-50 text-slate-600 hover:text-indigo-900 hover:bg-indigo-50/50 hover:border-indigo-200"
-                      }`}
+                      className={`p-2.5 rounded-2xl text-left border-2 transition-all cursor-pointer ${tone === t.id
+                          ? "bg-indigo-600 border-indigo-600 text-white shadow-md shadow-indigo-600/20 scale-[1.02]"
+                          : "bg-white border-slate-200/80 text-slate-700 hover:text-indigo-900 hover:bg-slate-50 hover:border-slate-300"
+                        }`}
                     >
                       <div className="text-xs font-bold">{t.label}</div>
-                      <div className="text-[10px] text-slate-500 leading-tight mt-0.5 truncate font-medium">
+                      <div className={`text-[10px] leading-tight mt-0.5 truncate font-medium ${tone === t.id ? "text-indigo-100" : "text-slate-500"}`}>
                         {t.desc}
                       </div>
                     </button>
@@ -472,7 +503,7 @@ export default function ArticleStudioPage() {
                 {isGenerating ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Synthesizing with Gemini 2.5 Flash...
+                    Synthesizing with Gemini 3.6 Flash...
                   </>
                 ) : (
                   <>
@@ -493,11 +524,10 @@ export default function ArticleStudioPage() {
                 <button
                   type="button"
                   onClick={() => setViewMode("preview")}
-                  className={`px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                    viewMode === "preview"
+                  className={`px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${viewMode === "preview"
                       ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
                       : "text-slate-600 hover:text-indigo-700 hover:bg-white"
-                  }`}
+                    }`}
                 >
                   <Eye className="w-3.5 h-3.5" />
                   Live Preview
@@ -505,11 +535,10 @@ export default function ArticleStudioPage() {
                 <button
                   type="button"
                   onClick={() => setViewMode("editor")}
-                  className={`px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                    viewMode === "editor"
+                  className={`px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${viewMode === "editor"
                       ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
                       : "text-slate-600 hover:text-indigo-700 hover:bg-white"
-                  }`}
+                    }`}
                 >
                   <Edit3 className="w-3.5 h-3.5" />
                   Markdown Editor
@@ -540,7 +569,7 @@ export default function ArticleStudioPage() {
                   disabled={isRefactoring}
                   className="whitespace-nowrap px-3 py-1 rounded-full bg-indigo-50/80 hover:bg-indigo-100 hover:text-indigo-800 border border-indigo-200 text-[11px] text-indigo-800 font-bold transition-all shrink-0 cursor-pointer disabled:opacity-40 shadow-2xs hover:scale-105"
                 >
-                  ⚡ Make Punchier
+                  Make Punchier
                 </button>
 
                 <button
@@ -548,7 +577,7 @@ export default function ArticleStudioPage() {
                   disabled={isRefactoring}
                   className="whitespace-nowrap px-3 py-1 rounded-full bg-indigo-50/80 hover:bg-indigo-100 hover:text-indigo-800 border border-indigo-200 text-[11px] text-indigo-800 font-bold transition-all shrink-0 cursor-pointer disabled:opacity-40 shadow-2xs hover:scale-105"
                 >
-                  📊 Add Table
+                  Add Table
                 </button>
 
                 <button
@@ -556,7 +585,7 @@ export default function ArticleStudioPage() {
                   disabled={isRefactoring}
                   className="whitespace-nowrap px-3 py-1 rounded-full bg-indigo-50/80 hover:bg-indigo-100 hover:text-indigo-800 border border-indigo-200 text-[11px] text-indigo-800 font-bold transition-all shrink-0 cursor-pointer disabled:opacity-40 shadow-2xs hover:scale-105"
                 >
-                  🔍 SEO Meta
+                  SEO Meta
                 </button>
 
                 <button
@@ -564,7 +593,7 @@ export default function ArticleStudioPage() {
                   disabled={isRefactoring}
                   className="whitespace-nowrap px-3 py-1 rounded-full bg-indigo-50/80 hover:bg-indigo-100 hover:text-indigo-800 border border-indigo-200 text-[11px] text-indigo-800 font-bold transition-all shrink-0 cursor-pointer disabled:opacity-40 shadow-2xs hover:scale-105"
                 >
-                  📝 Polish Flow
+                  Polish Flow
                 </button>
 
                 {/* Translate dropdown */}
@@ -585,7 +614,7 @@ export default function ArticleStudioPage() {
                     disabled={isRefactoring}
                     className="whitespace-nowrap px-3.5 py-1 rounded-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white text-[11px] font-bold transition-all cursor-pointer disabled:opacity-40 shadow-xs hover:scale-105"
                   >
-                    🌐 Translate
+                    Translate
                   </button>
                 </div>
               </div>
@@ -666,7 +695,7 @@ export default function ArticleStudioPage() {
               {isGenerating ? (
                 <div className="flex flex-col items-center justify-center h-full text-slate-500 text-xs gap-3">
                   <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
-                  <p className="text-sm font-bold text-slate-800">Synthesizing Content with Gemini 2.5 Flash...</p>
+                  <p className="text-sm font-bold text-slate-800">Synthesizing Content with Gemini 3.6 Flash...</p>
                   <p className="text-xs text-slate-500">Applying tone: {tone} • Audience: {targetAudience}</p>
                 </div>
               ) : isRefactoring ? (

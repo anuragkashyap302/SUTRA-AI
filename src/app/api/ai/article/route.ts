@@ -85,7 +85,7 @@ FORMATTING REQUIREMENTS:
       ],
       config: {
         temperature: 0.7,
-        maxOutputTokens: length + 300,
+        maxOutputTokens: Math.max(3500, length * 3),
       },
     });
 

@@ -1,11 +1,14 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
 /**
  * Clerk Authentication Middleware
  * 
  * Ye middleware har incoming request ko inspect karta hai:
  * 1. Agar route public hai (Landing page, Community gallery, Sign-in), toh request pass ho jati hai.
- * 2. Agar route protected hai (/dashboard, /studio, /api/ai), toh `auth.protect()` user ko sign-in ke liye redirect karta hai.
+ * 2. Agar route protected hai:
+ *    - API routes (/api/*): 401 JSON response return karta hai (JSON parse error se bachata hai).
+ *    - Page routes (/dashboard, etc.): User ko sign-in ke liye redirect karta hai.
  */
 const isPublicRoute = createRouteMatcher([
   "/",
@@ -20,9 +23,17 @@ const isPublicRoute = createRouteMatcher([
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
-  // Enforce auth only on private API mutations or sensitive endpoints
   if (!isPublicRoute(req)) {
-    await auth.protect();
+    const { userId } = await auth();
+    if (!userId) {
+      if (req.nextUrl.pathname.startsWith("/api/")) {
+        return NextResponse.json(
+          { success: false, error: "Unauthorized: Please sign in to continue." },
+          { status: 401 }
+        );
+      }
+      await auth.protect();
+    }
   }
 });
 

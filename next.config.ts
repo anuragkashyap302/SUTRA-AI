@@ -8,6 +8,9 @@ import type { NextConfig } from "next";
  */
 const nextConfig: NextConfig = {
   experimental: {
+    // lucide-react ko optimize karne ke liye isko add kiya gya hai 
+    // AST (Abstract Syntax Tree) ki help se lucide-react ko optimize kiya jata hai 
+    // ye teeno function ko ek saath import krta hai jbki humko sirf 1 hi chaiye 
     optimizePackageImports: ["lucide-react"],
   },
   images: {

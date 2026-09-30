@@ -67,7 +67,7 @@ export function PricingModal({
       credits: "20 Daily Credits",
       badge: "Current Plan",
       features: [
-        "Gemini 2.5 Flash Article & Titles",
+        "Gemini 3.6 Flash Article & Titles",
         "ClipDrop Background Removal",
         "Basic ATS Resume Review",
         "Public Community Feed Access",

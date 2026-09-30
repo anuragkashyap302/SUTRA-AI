@@ -35,13 +35,10 @@ export interface PublicCreation {
   createdAt: Date | string;
 }
 
-const TYPE_CONFIG: { [key: string]: { label: string; icon: typeof FileText; color: string; studioHref: string } } = {
-  article: { label: "Article", icon: SquarePen, color: "text-blue-700 bg-blue-50 border-blue-200", studioHref: "/studio/article" },
-  "blog-title": { label: "Blog Titles", icon: Hash, color: "text-purple-700 bg-purple-50 border-purple-200", studioHref: "/studio/blog-titles" },
-  image: { label: "AI Image", icon: ImageIcon, color: "text-emerald-700 bg-emerald-50 border-emerald-200", studioHref: "/studio/image" },
+const TYPE_CONFIG: { [key: string]: { label: string; icon: typeof ImageIcon; color: string; studioHref: string } } = {
+  image: { label: "AI Art", icon: ImageIcon, color: "text-emerald-700 bg-emerald-50 border-emerald-200", studioHref: "/studio/image" },
   "object-removal": { label: "Inpainting", icon: Scissors, color: "text-rose-700 bg-rose-50 border-rose-200", studioHref: "/studio/remove-object" },
-  "document-rag": { label: "Hybrid RAG", icon: Cpu, color: "text-pink-700 bg-pink-50 border-pink-200", studioHref: "/studio/rag" },
-  "resume-review": { label: "Resume ATS", icon: FileText, color: "text-teal-700 bg-teal-50 border-teal-200", studioHref: "/studio/review-resume" },
+  "remove-background": { label: "BG Removal", icon: Scissors, color: "text-amber-700 bg-amber-50 border-amber-200", studioHref: "/studio/remove-background" },
 };
 
 export function CommunityFeed({
@@ -53,11 +50,14 @@ export function CommunityFeed({
 }) {
   const router = useRouter();
   const [creations, setCreations] = useState<PublicCreation[]>(() =>
-    initialCreations.map((item) => ({
-      ...item,
-      imageUrl: item.imageUrl || (item.content?.startsWith("http") ? item.content : null),
-      likesCount: Math.max(item.likesCount || 0, item.likes?.length || 0),
-    }))
+    initialCreations
+      .filter((item) => item.imageUrl || item.content?.startsWith("http"))
+      .filter((item) => item.type !== "article" && item.type !== "blog-title" && item.type !== "document-rag" && item.type !== "resume-review")
+      .map((item) => ({
+        ...item,
+        imageUrl: item.imageUrl || (item.content?.startsWith("http") ? item.content : null),
+        likesCount: Math.max(item.likesCount || 0, item.likes?.length || 0),
+      }))
   );
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -74,30 +74,34 @@ export function CommunityFeed({
   });
   const [copiedId, setCopiedId] = useState<number | null>(null);
 
-  // Filtered public feed
+  // Filtered public visual feed (strictly image creations)
   const filteredFeed = creations.filter((item) => {
+    if (!item.imageUrl && !item.content?.startsWith("http")) return false;
+    if (item.type === "article" || item.type === "blog-title" || item.type === "document-rag" || item.type === "resume-review") {
+      return false;
+    }
+
     const matchesCategory =
       activeCategory === "all" ||
       item.type.toLowerCase().includes(activeCategory.toLowerCase());
 
     const matchesSearch =
       (item.title && item.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      (item.prompt && item.prompt.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      (item.content && item.content.toLowerCase().includes(searchQuery.toLowerCase()));
+      (item.prompt && item.prompt.toLowerCase().includes(searchQuery.toLowerCase()));
 
     return matchesCategory && matchesSearch;
   });
 
   // 1-Click Prompt Remixing Engine
   const handleRemix = (item: PublicCreation) => {
-    const config = TYPE_CONFIG[item.type] || { studioHref: "/studio/article" };
+    const config = TYPE_CONFIG[item.type] || { studioHref: "/studio/image" };
     const queryParams = new URLSearchParams({
       remixPrompt: item.prompt,
       title: item.title || "",
       type: item.type,
     });
 
-    toast.success(`✨ Remixing prompt into ${config.label || "Studio"}!`);
+    toast.success(`Remixing prompt into ${config.label || "Studio"}!`);
     router.push(`${config.studioHref}?${queryParams.toString()}`);
   };
 
@@ -162,40 +166,39 @@ export function CommunityFeed({
   };
 
   const categories = [
-    { id: "all", label: "All Items", count: creations.length },
-    { id: "article", label: "✍️ Articles", count: creations.filter((c) => c.type === "article").length },
-    { id: "image", label: "🎨 AI Images", count: creations.filter((c) => c.type === "image").length },
-    { id: "blog-title", label: "🏷️ Blog Titles", count: creations.filter((c) => c.type === "blog-title").length },
-    { id: "object-removal", label: "✂️ Inpaintings", count: creations.filter((c) => c.type === "object-removal").length },
-    { id: "document-rag", label: "🧠 Hybrid RAG", count: creations.filter((c) => c.type === "document-rag").length },
+    { id: "all", label: "All Visuals", icon: Sparkles, count: creations.length },
+    { id: "image", label: "AI Art", icon: ImageIcon, count: creations.filter((c) => c.type === "image").length },
+    { id: "object-removal", label: "Canvas Inpainting", icon: Scissors, count: creations.filter((c) => c.type === "object-removal" || c.type === "remove-background").length },
   ];
 
   return (
     <div className="space-y-6">
       {/* Category Pills & Search Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        {/* Category Pills */}
+        {/* Category Pills with Professional Lucide Icons */}
         <div className="overflow-x-auto flex items-center gap-2 pb-2 no-scrollbar">
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              className={`whitespace-nowrap px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
-                activeCategory === cat.id
-                  ? "bg-indigo-600 text-white shadow-xs"
-                  : "bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200 shadow-xs"
-              }`}
-            >
-              <span>{cat.label}</span>
-              <span
-                className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
-                  activeCategory === cat.id ? "bg-white/25 text-white" : "bg-slate-100 text-slate-600"
-                }`}
+          {categories.map((cat) => {
+            const Icon = cat.icon;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id)}
+                className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${activeCategory === cat.id
+                    ? "bg-slate-900 text-white shadow-sm"
+                    : "bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200/90 shadow-2xs"
+                  }`}
               >
-                {cat.count}
-              </span>
-            </button>
-          ))}
+                <Icon className={`w-3.5 h-3.5 ${activeCategory === cat.id ? "text-emerald-400" : "text-slate-500"}`} />
+                <span>{cat.label}</span>
+                <span
+                  className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${activeCategory === cat.id ? "bg-white/20 text-white" : "bg-slate-100 text-slate-700"
+                    }`}
+                >
+                  {cat.count}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Search Bar */}
@@ -286,17 +289,15 @@ export function CommunityFeed({
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleToggleLike(item)}
-                      className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-xl border transition-all cursor-pointer shadow-xs ${
-                        isLiked
-                          ? "bg-rose-50 border-rose-200 text-rose-600"
-                          : "bg-slate-50 border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                      }`}
+                      className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-xl border transition-all cursor-pointer shadow-xs ${isLiked
+                        ? "bg-rose-50 border-rose-200 text-rose-600"
+                        : "bg-slate-50 border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                        }`}
                       title={isLiked ? "Unlike" : "Like this creation"}
                     >
                       <Heart
-                        className={`w-3.5 h-3.5 transition-transform active:scale-125 ${
-                          isLiked ? "text-rose-500 fill-rose-500" : ""
-                        }`}
+                        className={`w-3.5 h-3.5 transition-transform active:scale-125 ${isLiked ? "text-rose-500 fill-rose-500" : ""
+                          }`}
                       />
                       <span>{item.likesCount || 0}</span>
                     </button>

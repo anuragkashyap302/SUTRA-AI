@@ -2,7 +2,7 @@ export interface TelemetryTrace {
   id: string;
   timestamp: string; // ISO string
   studio: string; // e.g. "Hybrid Document RAG", "Article Studio", "AI Image Generator", "Inpainting Studio", "ATS Resume Reviewer", "Blog Titles"
-  model: string; // e.g. "gemini-2.5-flash", "text-embedding-004", "clipdrop-inpaint", "cloudinary-diffusion"
+  model: string; // e.g. "gemini-3.6-flash", "text-embedding-004", "clipdrop-inpaint", "cloudinary-diffusion"
   latencyMs: number;
   ttftMs?: number; // Time to first token
   promptTokens: number;
@@ -24,7 +24,7 @@ export interface TelemetrySummary {
 }
 
 // Official API Pricing (USD per token)
-// Gemini 2.5 / 1.5 Flash: $0.075 / 1M input ($0.000000075), $0.30 / 1M output ($0.00000030)
+// Gemini 3.6 / 2.5 / 1.5 Flash: $0.075 / 1M input ($0.000000075), $0.30 / 1M output ($0.00000030)
 // text-embedding-004: $0.02 / 1M ($0.00000002)
 // Vision / Inpaint / ClipDrop API: $0.01 per execution flat rate
 export function calculateCallCost(
@@ -38,7 +38,7 @@ export function calculateCallCost(
   if (model.includes("embedding")) {
     return (promptTokens + completionTokens) * 0.00000002;
   }
-  // Default Gemini 2.5/1.5 Flash
+  // Default Gemini 3.6/2.5/1.5 Flash
   const inputCost = promptTokens * 0.000000075;
   const outputCost = completionTokens * 0.0000003;
   return Number((inputCost + outputCost).toFixed(7));
@@ -55,7 +55,7 @@ export const INITIAL_SEED_TRACES: TelemetryTrace[] = [
     id: "tr-rag-9941a",
     timestamp: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
     studio: "Hybrid Document RAG",
-    model: "gemini-2.5-flash + text-embedding-004",
+    model: "gemini-3.6-flash + text-embedding-004",
     latencyMs: 842,
     ttftMs: 240,
     promptTokens: 1420,
@@ -77,7 +77,7 @@ export const INITIAL_SEED_TRACES: TelemetryTrace[] = [
     id: "tr-art-8820c",
     timestamp: new Date(Date.now() - 1000 * 60 * 35).toISOString(),
     studio: "Article Studio",
-    model: "gemini-2.5-flash",
+    model: "gemini-3.6-flash",
     latencyMs: 1250,
     ttftMs: 190,
     promptTokens: 850,
@@ -116,7 +116,7 @@ export const INITIAL_SEED_TRACES: TelemetryTrace[] = [
     id: "tr-res-5509e",
     timestamp: new Date(Date.now() - 1000 * 60 * 110).toISOString(),
     studio: "ATS Resume Reviewer",
-    model: "gemini-2.5-flash",
+    model: "gemini-3.6-flash",
     latencyMs: 980,
     ttftMs: 210,
     promptTokens: 2150,
