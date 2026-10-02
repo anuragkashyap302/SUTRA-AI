@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useClerk } from "@clerk/nextjs";
 import {
   Zap,
   Check,
@@ -11,6 +12,7 @@ import {
   Flame,
   ArrowRight,
   Loader2,
+  ExternalLink,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -28,9 +30,44 @@ export function PricingModal({
   onCreditsUpdated,
 }: PricingModalProps) {
   const [loadingTopUp, setLoadingTopUp] = useState(false);
+  const { openUserProfile } = useClerk();
 
   if (!isOpen) return null;
 
+  // Real Clerk Billing Checkout Flow with Auto-Switch to Billing Tab
+  const handleUpgradeViaClerk = (planName: string) => {
+    onClose();
+    toast.info(`Opening Clerk Billing for ${planName}...`, {
+      description: "Redirecting directly to your subscription plans...",
+    });
+
+    try {
+      (openUserProfile as any)({ path: "billing" });
+    } catch {
+      openUserProfile();
+    }
+
+    // Polling helper to automatically click the "Billing" tab inside Clerk modal
+    const tryClickBillingTab = (attempt = 0) => {
+      const allClickables = Array.from(document.querySelectorAll("button, a, div[role='button']"));
+      const billingTab = allClickables.find((el) => {
+        const text = el.textContent?.trim().toLowerCase() || "";
+        const aria = el.getAttribute("aria-label")?.toLowerCase() || "";
+        const loc = el.getAttribute("data-localization-key")?.toLowerCase() || "";
+        return text === "billing" || aria.includes("billing") || loc.includes("billing");
+      }) as HTMLElement | undefined;
+
+      if (billingTab) {
+        billingTab.click();
+      } else if (attempt < 20) {
+        setTimeout(() => tryClickBillingTab(attempt + 1), 100);
+      }
+    };
+
+    setTimeout(() => tryClickBillingTab(0), 100);
+  };
+
+  // Developer Test Refill Mode
   const handleTopUp = async () => {
     setLoadingTopUp(true);
     const toastId = toast.loading("Refilling +20 creation credits in PostgreSQL...");
@@ -63,82 +100,110 @@ export function PricingModal({
       name: "Free Starter",
       price: "$0",
       period: "forever",
-      description: "Ideal for testing AI studios and light personal creation.",
+      description: "Ideal for testing all AI studios with daily refills.",
       credits: "20 Daily Credits",
       badge: "Current Plan",
       features: [
-        "Gemini 3.6 Flash Article & Titles",
-        "ClipDrop Background Removal",
-        "Basic ATS Resume Review",
+        "Gemini 3.6 Flash Articles & Titles",
+        "Flagship Hybrid RAG (PDF Q&A)",
+        "AI Image Gen & Object Removal",
+        "ATS Resume Review & Feedback",
         "Public Community Feed Access",
+        "Standard Generation Speed",
       ],
       highlighted: false,
       buttonText: "Active Plan",
       disabled: true,
+      action: "none",
+    },
+    {
+      name: "Premium",
+      price: "$2",
+      period: "per month",
+      description: "Light creator pack with 5x monthly credit reserve.",
+      credits: "100 Monthly Credits",
+      badge: "Starter Pro",
+      features: [
+        "Gemini 3.6 Flash Articles & Titles",
+        "Flagship Hybrid RAG (PDF Q&A)",
+        "AI Image Gen & Object Removal",
+        "ATS Resume Review & Feedback",
+        "Public Community Feed Access",
+        "Fast Generation Speed",
+      ],
+      highlighted: false,
+      buttonText: "Subscribe via Clerk",
+      disabled: false,
+      action: "clerk",
     },
     {
       name: "Pro Creator",
       price: "$19",
       period: "per month",
-      description: "For professionals, content creators & engineers.",
+      description: "High-volume generation for builders & creators.",
       credits: "500 Monthly Credits",
       badge: "Most Popular",
       features: [
-        "All Free Tier Features",
-        "Flagship Hybrid RAG (pgvector + BM25)",
-        "Interactive Canvas Inpainting Brush",
-        "Claude Artifacts-Style Split WYSIWYG",
-        "1-Click PDF, MD & HTML Exports",
-        "No Watermarks & Priority Generation",
+        "Gemini 3.6 Flash Articles & Titles",
+        "Flagship Hybrid RAG (PDF Q&A)",
+        "AI Image Gen & Object Removal",
+        "ATS Resume Review & Feedback",
+        "Public Community Feed Access",
+        "Priority Multimodal Compute",
       ],
       highlighted: true,
-      buttonText: "Upgrade to Pro",
+      buttonText: "Subscribe via Clerk",
       disabled: false,
+      action: "clerk",
     },
     {
       name: "Enterprise",
       price: "$49",
       period: "per month",
-      description: "For high-volume teams, founders & organizations.",
+      description: "Unlimited generation quota for high-demand workflows.",
       credits: "Unlimited Credits",
       badge: "Scale & SLA",
       features: [
-        "Everything in Pro Creator",
-        "Unlimited Generation Credits",
-        "Dedicated Neon Vector Indexing",
-        "100K Token Document Ingestion",
-        "Custom System Prompts & Tone",
-        "24/7 Dedicated SLA & Support",
+        "Gemini 3.6 Flash Articles & Titles",
+        "Flagship Hybrid RAG (PDF Q&A)",
+        "AI Image Gen & Object Removal",
+        "ATS Resume Review & Feedback",
+        "Public Community Feed Access",
+        "Dedicated Speed & 24/7 SLA",
       ],
       highlighted: false,
-      buttonText: "Upgrade to Enterprise",
+      buttonText: "Subscribe via Clerk",
       disabled: false,
+      action: "clerk",
     },
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-5xl bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
-        {/* Glow Effects */}
-        <div className="absolute -top-24 -left-24 w-72 h-72 bg-indigo-100 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-pink-100 rounded-full blur-3xl pointer-events-none" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="relative w-full max-w-6xl bg-white rounded-3xl p-5 sm:p-8 border border-emerald-100 shadow-2xl shadow-emerald-950/20 overflow-hidden max-h-[92vh] overflow-y-auto">
+        {/* Emerald & Teal Ambient Glows */}
+        <div className="absolute -top-24 -left-24 w-80 h-80 bg-emerald-200/40 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-teal-200/40 rounded-full blur-3xl pointer-events-none" />
 
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
+          className="absolute top-5 right-5 p-2 rounded-xl bg-slate-100 hover:bg-emerald-50 text-slate-500 hover:text-emerald-800 transition-colors cursor-pointer border border-transparent hover:border-emerald-200 z-10"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Modal Header */}
-        <div className="text-center max-w-2xl mx-auto mb-8 space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-900 border border-amber-200 text-xs font-bold">
-            <Zap className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-            Credit Balance: <span className="font-extrabold">{currentCredits} Credits</span>
+        <div className="text-center max-w-2xl mx-auto mb-6 space-y-2 relative z-10">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-900 border border-emerald-200 text-xs font-bold shadow-xs">
+            <Zap className="w-3.5 h-3.5 text-emerald-600 fill-emerald-600" />
+            Credit Balance: <span className="font-extrabold text-emerald-950">{currentCredits} Credits</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
-            Upgrade Your Creation Power
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-serif">
+            Upgrade Your{" "}
+            <span className="italic font-serif font-extrabold bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 bg-clip-text text-transparent">
+              Creation Power
+            </span>
           </h2>
           <p className="text-xs sm:text-sm text-slate-600">
             Get higher credit quotas, unlock the Flagship Hybrid RAG engine, and create without limits.
@@ -146,14 +211,15 @@ export function PricingModal({
         </div>
 
         {/* 1-Click Instant Test Top-Up Bar */}
-        <div className="mb-8 p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 border border-amber-200/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50/70 to-emerald-50 border border-emerald-200/80 flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10 shadow-xs">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-700 border border-amber-500/30 flex items-center justify-center shrink-0">
-              <Flame className="w-5 h-5 fill-amber-500 text-amber-500" />
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-700 border border-emerald-500/30 flex items-center justify-center shrink-0 shadow-xs">
+              <Flame className="w-5 h-5 fill-emerald-600 text-emerald-600" />
             </div>
             <div>
-              <h4 className="text-xs sm:text-sm font-bold text-slate-900">
+              <h4 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
                 Developer Test Mode: Instant Credit Refill
+                <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-semibold border border-emerald-200">Free Sandbox</span>
               </h4>
               <p className="text-[11px] text-slate-600">
                 Simulate a credit purchase by adding +20 credits directly to your Neon PostgreSQL balance.
@@ -164,7 +230,7 @@ export function PricingModal({
           <button
             onClick={handleTopUp}
             disabled={loadingTopUp}
-            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-extrabold text-xs shadow-md shadow-amber-500/20 flex items-center gap-1.5 transition-all shrink-0 cursor-pointer disabled:opacity-50"
+            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-extrabold text-xs shadow-md shadow-amber-500/20 flex items-center gap-1.5 transition-all shrink-0 cursor-pointer disabled:opacity-50 hover:scale-105 active:scale-95"
           >
             {loadingTopUp ? (
               <>
@@ -180,48 +246,49 @@ export function PricingModal({
           </button>
         </div>
 
-        {/* Plans Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* 4 Plans Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 relative z-10">
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`rounded-3xl p-6 flex flex-col justify-between transition-all relative ${
+              className={`rounded-3xl p-5 sm:p-6 flex flex-col justify-between transition-all relative ${
                 plan.highlighted
-                  ? "bg-white border-2 border-indigo-600 shadow-xl shadow-indigo-500/10 scale-[1.02]"
-                  : "bg-slate-50/70 border border-slate-200"
+                  ? "bg-white border-2 border-emerald-500 shadow-xl shadow-emerald-500/15 scale-[1.02] ring-4 ring-emerald-500/10"
+                  : "bg-slate-50/70 border border-slate-200 hover:border-emerald-200 hover:bg-slate-50 transition-colors"
               }`}
             >
               {plan.highlighted && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-indigo-600 text-white text-[10px] font-extrabold uppercase tracking-wider shadow-md">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 text-white text-[10px] font-black uppercase tracking-wider shadow-md shadow-emerald-600/30 flex items-center gap-1 whitespace-nowrap">
+                  <Sparkles className="w-3 h-3" />
                   {plan.badge}
                 </div>
               )}
 
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-bold text-slate-900 text-lg">{plan.name}</h3>
+                  <h3 className="font-bold text-slate-900 text-base sm:text-lg">{plan.name}</h3>
                   {!plan.highlighted && (
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-200/70 text-slate-600 border border-slate-200">
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-200/70 text-slate-700 font-semibold border border-slate-200">
                       {plan.badge}
                     </span>
                   )}
                 </div>
 
-                <p className="text-xs text-slate-500 min-h-[32px] mb-4">
+                <p className="text-xs text-slate-500 min-h-[32px] mb-3">
                   {plan.description}
                 </p>
 
                 <div className="flex items-baseline gap-1 mb-2">
-                  <span className="text-3xl sm:text-4xl font-black text-slate-900">{plan.price}</span>
+                  <span className="text-3xl font-black text-slate-900">{plan.price}</span>
                   <span className="text-xs text-slate-500">/{plan.period}</span>
                 </div>
 
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-200/60 text-indigo-700 text-xs font-bold mb-6">
-                  <Zap className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs font-bold mb-4">
+                  <Zap className="w-3.5 h-3.5 text-emerald-600 fill-emerald-600" />
                   {plan.credits}
                 </div>
 
-                <div className="space-y-2.5 pb-6 border-t border-slate-200 pt-4">
+                <div className="space-y-2 pb-5 border-t border-slate-200/80 pt-3">
                   {plan.features.map((feat, idx) => (
                     <div key={idx} className="flex items-start gap-2 text-xs text-slate-700 font-medium">
                       <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
@@ -233,21 +300,21 @@ export function PricingModal({
 
               <button
                 onClick={() => {
-                  if (!plan.disabled) {
-                    handleTopUp();
+                  if (plan.action === "clerk") {
+                    handleUpgradeViaClerk(plan.name);
                   }
                 }}
-                disabled={plan.disabled || loadingTopUp}
-                className={`w-full py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                disabled={plan.disabled}
+                className={`w-full py-2.5 sm:py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                   plan.highlighted
-                    ? "bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/20"
+                    ? "bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white shadow-lg shadow-emerald-600/30 hover:shadow-emerald-600/40 hover:scale-[1.02] active:scale-[0.98]"
                     : plan.disabled
-                    ? "bg-slate-200 text-slate-400 cursor-not-allowed"
-                    : "bg-white hover:bg-slate-100 text-slate-800 border border-slate-300"
+                    ? "bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed"
+                    : "bg-slate-900 hover:bg-emerald-950 text-white border border-slate-800 hover:border-emerald-500 shadow-md hover:scale-[1.02] active:scale-[0.98]"
                 }`}
               >
                 {plan.buttonText}
-                {!plan.disabled && <ArrowRight className="w-3.5 h-3.5" />}
+                {!plan.disabled && <ExternalLink className="w-3.5 h-3.5 ml-0.5" />}
               </button>
             </div>
           ))}

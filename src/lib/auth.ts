@@ -12,10 +12,20 @@ import { eq, sql } from "drizzle-orm";
  * Interview Point: Lazy User Syncing pattern se hum external webhooks par 100% depend nahi hote.
  */
 export async function getOrCreateCurrentUser() {
-  const { userId } = await auth();
+  const { userId, has } = await auth();
 
   if (!userId) {
     return null;
+  }
+
+  // Detect active plan from Clerk Billing (if user subscribed via Clerk modal)
+  let clerkPlan: "free" | "pro" | "enterprise" = "free";
+  if (has) {
+    if (has({ plan: "enterprise" })) {
+      clerkPlan = "enterprise";
+    } else if (has({ plan: "pro_creator" }) || has({ plan: "pro" }) || has({ plan: "premium" })) {
+      clerkPlan = "pro";
+    }
   }
 
   // 1. Check if user already exists in Neon DB
@@ -24,6 +34,20 @@ export async function getOrCreateCurrentUser() {
   });
 
   if (existingUser) {
+    // If user upgraded on Clerk Billing, automatically sync plan and boost credits in DB!
+    if (clerkPlan !== "free" && existingUser.plan !== clerkPlan) {
+      const bonusCredits = clerkPlan === "enterprise" ? 999999 : 500;
+      const [updated] = await db
+        .update(users)
+        .set({
+          plan: clerkPlan,
+          credits: Math.max(existingUser.credits, bonusCredits),
+          updatedAt: new Date(),
+        })
+        .where(eq(users.id, userId))
+        .returning();
+      return updated;
+    }
     return existingUser;
   }
 
@@ -76,7 +100,7 @@ export async function deductUserCredits(userId: string, cost: number = 1): Promi
     return { success: false, error: "User not found" };
   }
 
-  if (user.plan === "pro" || user.plan === "premium") {
+  if (user.plan === "pro" || user.plan === "enterprise" || user.plan === "premium") {
     return { success: true, remainingCredits: user.credits };
   }
 

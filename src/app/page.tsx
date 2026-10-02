@@ -1,5 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
+import { HomePricingSection } from "@/components/home/HomePricingSection";
+import { HomeTestimonialsSection } from "@/components/home/HomeTestimonialsSection";
 import { 
   SquarePen, 
   Hash, 
@@ -82,26 +84,6 @@ export default function HomePage() {
     },
   ];
 
-  const testimonials = [
-    {
-      name: "Alex Rivera",
-      role: "Lead AI Engineer, Enterprise Systems",
-      content: "The Hybrid RAG engine with Reciprocal Rank Fusion and exact [Page X] bounding citations is the most impressive open-source implementation I've seen. Truly enterprise grade.",
-      rating: 5,
-    },
-    {
-      name: "Priya Sharma",
-      role: "Product Designer & Content Lead",
-      content: "The split-pane Claude Artifacts studio with in-line table insertion and punchier refactors has cut our technical article drafting time by 60%.",
-      rating: 5,
-    },
-    {
-      name: "David Chen",
-      role: "Senior Full-Stack Architect",
-      content: "Next.js 15, Drizzle ORM, Neon pgvector, and real-time TTFT telemetry drawer all unified in one repository with 0 type errors. Incredible craftsmanship.",
-      rating: 5,
-    },
-  ];
 
   return (
     <div className="flex flex-col min-h-screen relative overflow-hidden bg-gradient-to-b from-emerald-50/50 via-slate-50/40 to-white">
@@ -211,8 +193,11 @@ export default function HomePage() {
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold uppercase tracking-wider mb-2">
             Enterprise Multimodal Studios
           </div>
-          <h2 className="text-2xl sm:text-4xl font-black text-slate-900">
-            Specialized AI Workspaces for Every Creator
+          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight font-serif">
+            Specialized AI Workspaces for{" "}
+            <span className="italic font-serif font-extrabold bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 bg-clip-text text-transparent">
+              Every Creator
+            </span>
           </h2>
           <p className="text-slate-600 mt-2 text-xs sm:text-sm max-w-xl mx-auto">
             Click on any studio to explore its dedicated interface with sample data and real-time generation.
@@ -264,134 +249,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Plan Pricing Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
-        <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold uppercase tracking-wider mb-2">
-            Transparent Pricing
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900">
-            Simple, Defensible Plans
-          </h2>
-          <p className="text-slate-600 mt-2 text-xs sm:text-sm max-w-xl mx-auto">
-            Start for free with daily credits. Scale up for dedicated vector indexing and priority multimodal compute.
-          </p>
-        </div>
+      {/* Plan Pricing Section (Connected to Clerk Billing) */}
+      <HomePricingSection />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
-          {/* Free Plan Card */}
-          <div className="bg-white/95 rounded-3xl p-8 border border-slate-200 shadow-md flex flex-col justify-between relative hover:shadow-xl transition-all">
-            <div>
-              <h3 className="text-xl font-bold text-slate-900">Free Starter</h3>
-              <div className="mt-4 flex items-baseline gap-1">
-                <span className="text-4xl font-black text-slate-900">$0</span>
-                <span className="text-xs text-slate-500">/ forever</span>
-              </div>
-              <p className="text-xs text-slate-500 mt-1">Always free for testing and exploration</p>
-
-              <div className="mt-8 space-y-3.5">
-                {[
-                  "20 Daily Free Generation Credits",
-                  "AI Article Writer & Blog Titles",
-                  "Public Community Hub Access",
-                  "Full Observability Drawer Tracing",
-                ].map((item) => (
-                  <div key={item} className="flex items-center gap-3 text-xs text-slate-700 font-medium">
-                    <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <Link
-              href="/studio/rag"
-              className="mt-8 w-full py-3.5 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold text-center border border-emerald-200 transition-all block shadow-xs"
-            >
-              Get Started Free
-            </Link>
-          </div>
-
-          {/* Pro Plan Card */}
-          <div className="bg-white rounded-3xl p-8 border-2 border-emerald-500 relative flex flex-col justify-between shadow-2xl shadow-emerald-500/15">
-            <div className="absolute -top-3.5 right-6 px-4 py-1 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-[10px] font-extrabold uppercase tracking-wider shadow-md">
-              Most Popular
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold text-slate-900">Pro Creator</h3>
-              <div className="mt-4 flex items-baseline gap-1">
-                <span className="text-4xl font-black text-slate-900">$19</span>
-                <span className="text-xs text-slate-500">/ month</span>
-              </div>
-              <p className="text-xs text-slate-500 mt-1">Billed monthly with instant top-up refill</p>
-
-              <div className="mt-8 space-y-3.5">
-                {[
-                  "500 Monthly Generation Credits",
-                  "Flagship Hybrid RAG (pgvector + BM25)",
-                  "Interactive Canvas Brush Inpainting",
-                  "Claude Artifacts In-Line Refactors",
-                  "1-Click PDF, MD & HTML Exports",
-                  "Priority Multimodal Generation",
-                ].map((item) => (
-                  <div key={item} className="flex items-center gap-3 text-xs text-slate-800 font-semibold">
-                    <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <Link
-              href="/dashboard"
-              className="mt-8 w-full py-3.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold text-center shadow-lg shadow-emerald-600/25 hover:shadow-xl transition-all block"
-            >
-              Upgrade to Pro
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full border-t border-emerald-100/80">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold uppercase tracking-wider mb-2">
-            User Testimonials
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">Loved by Creators & Builders</h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((t, idx) => {
-            const borderColors = ["border-emerald-200 hover:border-emerald-400", "border-teal-200 hover:border-teal-400", "border-indigo-200 hover:border-indigo-400"];
-            return (
-              <div key={t.name} className={`bg-white rounded-3xl p-6 flex flex-col justify-between border-2 ${borderColors[idx % 3]} shadow-md hover:shadow-xl transition-all duration-300`}>
-                <div>
-                  <div className="flex items-center gap-1 mb-3 text-amber-400">
-                    {Array.from({ length: t.rating }).map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                    ))}
-                  </div>
-                  <p className="text-xs text-slate-700 leading-relaxed italic font-normal">
-                    &ldquo;{t.content}&rdquo;
-                  </p>
-                </div>
-
-                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-600 flex items-center justify-center text-white text-xs font-bold shadow-xs">
-                    {t.name[0]}
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-900">{t.name}</h4>
-                    <p className="text-[11px] text-slate-500">{t.role}</p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+      {/* Dual Animated Infinite Scrolling Testimonials */}
+      <HomeTestimonialsSection />
     </div>
   );
 }

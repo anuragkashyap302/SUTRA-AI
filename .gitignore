@@ -41,3 +41,14 @@ FILE_BY_FILE_GUIDE.md
 # Personal interview preparation notes
 interviewer-prep/
 project_bible/
+
+# Local DB Backups & Migration Scripts
+backup/
+*.backup.json
+check-db.mjs
+backup-db.mjs
+restore-db.mjs
+generate-sql-dump.mjs
+apply-dump.mjs
+test-drizzle.mjs
+sync-clerk-users.mjs
