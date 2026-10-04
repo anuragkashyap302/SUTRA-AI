@@ -62,23 +62,25 @@ export default function ImageGenerationPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50/70 via-white to-teal-50/50 p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+    <div className="min-h-screen bg-transparent p-4 sm:p-6 lg:p-8 relative">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Studio Header */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-emerald-100">
-          <div className="flex items-center gap-3.5">
-            <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-white">
-              <ImageIcon className="w-7 h-7" />
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-emerald-200/80">
+          <div className="flex items-start sm:items-center gap-3.5">
+            <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-600 flex items-center justify-center shadow-md shadow-emerald-500/20 text-white shrink-0">
+              <ImageIcon className="w-6 h-6" />
             </div>
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100/80 text-emerald-700 border border-emerald-200 text-xs font-bold mb-1 shadow-xs">
-                <Sparkles className="w-3 h-3 text-emerald-600" />
-                Generative Diffusion Studio
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-emerald-100/90 text-emerald-900 border border-emerald-200/90 text-[11px] font-bold mb-1 shadow-2xs backdrop-blur-xs">
+                  <Sparkles className="w-3 h-3 text-emerald-600" />
+                  Generative Diffusion Studio
+                </div>
               </div>
-              <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-600 bg-clip-text text-transparent leading-snug pb-0.5">
                 AI Image Generation
               </h1>
-              <p className="text-xs sm:text-sm text-slate-600 mt-0.5 font-medium">
+              <p className="text-slate-600 text-xs sm:text-sm mt-1 leading-relaxed font-medium">
                 Generate photorealistic visuals, 3D art, and anime imagery powered by ClipDrop & Cloudinary.
               </p>
             </div>
@@ -88,7 +90,7 @@ export default function ImageGenerationPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Left Form */}
           <div className="lg:col-span-5">
-            <form onSubmit={handleGenerate} className="bg-white/95 backdrop-blur-md rounded-3xl p-6 sm:p-7 border border-emerald-100 shadow-xl space-y-5">
+            <form onSubmit={handleGenerate} className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 sm:p-7 border border-white/90 ring-1 ring-emerald-950/[0.05] shadow-xl space-y-5">
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                   Prompt Description <span className="text-emerald-500">*</span>
@@ -160,7 +162,7 @@ export default function ImageGenerationPage() {
 
           {/* Right Preview */}
           <div className="lg:col-span-7">
-            <div className="bg-white/95 backdrop-blur-md rounded-3xl p-6 border border-emerald-100 shadow-xl min-h-[450px] flex flex-col justify-center items-center">
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 border border-white/90 ring-1 ring-emerald-950/[0.05] shadow-xl min-h-[450px] flex flex-col justify-center items-center">
               {isGenerating ? (
                 <div className="flex flex-col items-center justify-center py-16 text-slate-500">
                   <Loader2 className="w-10 h-10 animate-spin text-emerald-600 mb-3" />

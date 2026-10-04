@@ -61,7 +61,7 @@ export default async function DashboardPage() {
       title: "🎨 Inpainting Canvas",
       description: "HTML5 brush tool for generative object removal and replacements.",
       icon: Scissors,
-      gradient: "from-[#5C6AF1] to-[#427DF5]",
+      gradient: "from-[#0D9488] to-[#10B981]",
       href: "/studio/remove-object",
       badge: "Canvas",
     },
@@ -69,7 +69,7 @@ export default async function DashboardPage() {
       title: "🏷️ Blog Title Generator",
       description: "Generate 10 catchy headline ideas for blogs & social posts.",
       icon: Hash,
-      gradient: "from-[#B153EA] to-[#E549A3]",
+      gradient: "from-[#F43F5E] to-[#FB923C]",
       href: "/studio/blog-titles",
     },
     {
@@ -98,14 +98,14 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8 max-w-7xl mx-auto py-4">
       {/* Top Banner / Welcome Area */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-white/90 ring-1 ring-emerald-950/[0.05] shadow-xl relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-semibold mb-3 shadow-xs">
-            <Zap className="w-3.5 h-3.5 text-indigo-600" />
-            Active Plan: <span className="capitalize font-bold text-indigo-900">{userPlan}</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold mb-3 shadow-xs">
+            <Zap className="w-3.5 h-3.5 text-emerald-600" />
+            Active Plan: <span className="capitalize font-bold text-emerald-900">{userPlan}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-            Welcome back, <span className="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">{user?.name || "Creator"}</span>
+            Welcome back, <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">{user?.name || "Creator"}</span>
           </h1>
           <p className="text-slate-500 text-xs sm:text-sm mt-1 font-medium">
             Choose an AI tool to generate, transform, or search your enterprise documents.
@@ -133,7 +133,7 @@ export default async function DashboardPage() {
       <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <Flame className="w-5 h-5 text-indigo-600" />
+            <Flame className="w-5 h-5 text-emerald-600" />
             Multimodal AI Creation Studios
           </h2>
         </div>
@@ -145,7 +145,7 @@ export default async function DashboardPage() {
               <Link
                 key={tool.title}
                 href={tool.href}
-                className="bg-white rounded-2xl p-5 group flex flex-col justify-between border border-slate-200/80 shadow-sm hover:shadow-md hover:border-indigo-300 transition-all duration-300 cursor-pointer"
+                className="bg-white rounded-2xl p-5 group flex flex-col justify-between border border-slate-200/80 shadow-sm hover:shadow-md hover:border-teal-300 transition-all duration-300 cursor-pointer"
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
@@ -155,22 +155,22 @@ export default async function DashboardPage() {
                       <Icon className="w-5 h-5" />
                     </div>
                     {tool.badge && (
-                      <span className="px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 text-[10px] font-mono font-bold shadow-xs">
+                      <span className="px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200 text-[10px] font-mono font-bold shadow-xs">
                         {tool.badge}
                       </span>
                     )}
                   </div>
 
-                  <h3 className="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors flex items-center justify-between text-sm">
+                  <h3 className="font-bold text-slate-900 group-hover:text-teal-600 transition-colors flex items-center justify-between text-sm">
                     {tool.title}
-                    <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-indigo-600" />
+                    <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-teal-600" />
                   </h3>
                   <p className="text-xs text-slate-500 mt-1.5 leading-relaxed font-medium">
                     {tool.description}
                   </p>
                 </div>
 
-                <div className="mt-4 pt-2.5 border-t border-slate-100 text-xs font-bold text-indigo-600 flex items-center gap-1">
+                <div className="mt-4 pt-2.5 border-t border-slate-100 text-xs font-bold text-teal-600 flex items-center gap-1">
                   Launch Studio &rarr;
                 </div>
               </Link>

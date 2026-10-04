@@ -2,15 +2,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { HomePricingSection } from "@/components/home/HomePricingSection";
 import { HomeTestimonialsSection } from "@/components/home/HomeTestimonialsSection";
-import { 
-  SquarePen, 
-  Hash, 
-  Image as ImageIcon, 
-  Eraser, 
-  Scissors, 
-  FileText, 
-  Check, 
-  Star, 
+import {
+  SquarePen,
+  Hash,
+  Image as ImageIcon,
+  Eraser,
+  Scissors,
+  FileText,
+  Check,
+  Star,
   ArrowRight,
   Play,
   FileSearch,
@@ -40,8 +40,8 @@ export default function HomePage() {
       badge: "Popular",
       description: "Dual-pane Markdown/WYSIWYG editor with 1-click in-line AI transformations, live reading stats, and PDF export.",
       icon: SquarePen,
-      gradient: "from-indigo-600 to-blue-500",
-      shadow: "shadow-indigo-500/20",
+      gradient: "from-teal-600 to-emerald-500",
+      shadow: "shadow-teal-500/20",
       href: "/studio/article",
       tag: "Gemini 3.6 Flash",
     },
@@ -50,8 +50,8 @@ export default function HomePage() {
       badge: "Vision",
       description: "HTML5 brush mask canvas with normalized coordinate scaling for seamless object removal and generative replacement.",
       icon: Sparkles,
-      gradient: "from-violet-600 to-purple-500",
-      shadow: "shadow-purple-500/20",
+      gradient: "from-cyan-600 to-teal-500",
+      shadow: "shadow-cyan-500/20",
       href: "/studio/remove-object",
       tag: "ClipDrop + Diffusion",
     },
@@ -86,14 +86,9 @@ export default function HomePage() {
 
 
   return (
-    <div className="flex flex-col min-h-screen relative overflow-hidden bg-gradient-to-b from-emerald-50/50 via-slate-50/40 to-white">
-      {/* Background Decorative Gradient Glows */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[650px] pointer-events-none opacity-70 -z-10">
-        <div className="w-full h-full bg-gradient-to-b from-emerald-100/60 via-teal-50/40 to-transparent blur-3xl" />
-      </div>
-
+    <div className="flex flex-col min-h-screen relative bg-transparent">
       {/* Hero Section */}
-      <section className="pt-16 pb-14 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col items-center text-center">
+      <section className="pt-6 sm:pt-8 pb-14 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col items-center text-center relative z-10">
         {/* Top Floating Pill Badge with Pulse */}
         <Link
           href="/studio/rag"
@@ -107,13 +102,13 @@ export default function HomePage() {
         {/* Main Headline */}
         <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-slate-900 leading-[1.12]">
           The Multimodal AI Studio <br className="hidden sm:inline" />
-          <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-indigo-600 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
             for Next-Gen Creators
           </span>
         </h1>
 
         <p className="mt-6 text-base sm:text-lg text-slate-600 max-w-2xl font-normal leading-relaxed">
-          Create, research, and edit with production-grade AI tools. Featuring <strong className="text-emerald-800">Hybrid PDF Document RAG</strong>, <strong className="text-indigo-800">Claude Artifacts Split Canvas</strong>, and <strong className="text-purple-800">Interactive Brush Inpainting</strong>.
+          Create, research, and edit with production-grade AI tools. Featuring <strong className="text-emerald-800">Hybrid PDF Document RAG</strong>, <strong className="text-teal-800">Claude Artifacts Split Canvas</strong>, and <strong className="text-emerald-800">Interactive Brush Inpainting</strong>.
         </p>
 
         {/* Pill Action Buttons */}
@@ -138,7 +133,7 @@ export default function HomePage() {
         {/* Social Proof Pill Bar */}
         <div className="mt-10 inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/95 border border-emerald-100 shadow-md">
           <div className="flex -space-x-2">
-            {["from-emerald-500 to-teal-500", "from-indigo-500 to-blue-500", "from-purple-500 to-pink-500", "from-amber-500 to-orange-500"].map((grad, i) => (
+            {["from-emerald-500 to-teal-500", "from-teal-500 to-cyan-500", "from-rose-500 to-pink-500", "from-amber-500 to-orange-500"].map((grad, i) => (
               <div key={i} className={`w-6 h-6 rounded-full bg-gradient-to-tr ${grad} ring-2 ring-white flex items-center justify-center text-[9px] text-white font-bold`}>
                 {String.fromCharCode(65 + i)}
               </div>
@@ -168,7 +163,7 @@ export default function HomePage() {
             { label: "Query Latency", value: "< 50ms TTFT", icon: Zap, color: "text-amber-500" },
             { label: "Vector Search", value: "RRF (k=60)", icon: Cpu, color: "text-rose-500" },
             { label: "Citation Accuracy", value: "100% Grounded", icon: ShieldCheck, color: "text-emerald-500" },
-            { label: "Free Daily Tier", value: "20 Credits", icon: Sparkles, color: "text-indigo-500" },
+            { label: "Free Daily Tier", value: "20 Credits", icon: Sparkles, color: "text-teal-600" },
           ].map((stat, i) => {
             const Icon = stat.icon;
             return (

@@ -209,7 +209,7 @@ export function CommunityFeed({
             placeholder="Search prompts or topics..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-900 text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-xs font-medium"
+            className="w-full pl-9 pr-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-900 text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 shadow-xs font-medium"
           />
         </div>
       </div>
@@ -217,7 +217,7 @@ export function CommunityFeed({
       {/* Public Feed Cards Grid */}
       {filteredFeed.length === 0 ? (
         <div className="bg-white rounded-3xl p-12 text-center flex flex-col items-center max-w-lg mx-auto border border-slate-200/80 shadow-sm">
-          <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600 mb-4 shadow-xs">
+          <div className="w-14 h-14 rounded-2xl bg-teal-50 border border-teal-200 flex items-center justify-center text-teal-600 mb-4 shadow-xs">
             <FolderOpen className="w-7 h-7" />
           </div>
           <h3 className="text-base font-extrabold text-slate-900">No Creations Found</h3>
@@ -226,7 +226,7 @@ export function CommunityFeed({
           </p>
           <Link
             href="/studio/article"
-            className="mt-5 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-xs font-bold shadow-md shadow-indigo-600/20 transition-all cursor-pointer"
+            className="mt-5 px-4 py-2 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 text-white text-xs font-bold shadow-md shadow-teal-600/20 transition-all cursor-pointer"
           >
             Create in Studio
           </Link>
@@ -246,7 +246,7 @@ export function CommunityFeed({
             return (
               <div
                 key={item.id}
-                className="bg-white rounded-3xl p-5 sm:p-6 flex flex-col justify-between group border border-slate-200/80 shadow-sm hover:shadow-md hover:border-indigo-300 transition-all duration-300 relative overflow-hidden"
+                className="bg-white rounded-3xl p-5 sm:p-6 flex flex-col justify-between group border border-slate-200/80 shadow-sm hover:shadow-md hover:border-teal-300 transition-all duration-300 relative overflow-hidden"
               >
                 <div>
                   {/* Card Header: Type Badge & Date */}
@@ -274,7 +274,7 @@ export function CommunityFeed({
                   )}
 
                   {/* Title & Prompt */}
-                  <h3 className="text-sm sm:text-base font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-1">
+                  <h3 className="text-sm sm:text-base font-bold text-slate-900 group-hover:text-teal-600 transition-colors line-clamp-1">
                     {item.title || item.prompt.slice(0, 40)}
                   </h3>
 
@@ -318,7 +318,7 @@ export function CommunityFeed({
                   {/* 1-Click Remix Prompt Button */}
                   <button
                     onClick={() => handleRemix(item)}
-                    className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs font-bold shadow-md shadow-indigo-600/20 flex items-center gap-1 transition-all cursor-pointer shrink-0"
+                    className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white text-xs font-bold shadow-md shadow-teal-600/20 flex items-center gap-1 transition-all cursor-pointer shrink-0"
                   >
                     <Zap className="w-3 h-3" />
                     1-Click Remix

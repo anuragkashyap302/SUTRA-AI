@@ -33,8 +33,8 @@ export interface CreationItem {
 }
 
 const TYPE_CONFIG: { [key: string]: { label: string; icon: typeof FileText; color: string } } = {
-  article: { label: "Article", icon: SquarePen, color: "text-blue-700 bg-blue-50 border-blue-200" },
-  "blog-title": { label: "Blog Titles", icon: Hash, color: "text-purple-700 bg-purple-50 border-purple-200" },
+  article: { label: "Article", icon: SquarePen, color: "text-emerald-700 bg-emerald-50 border-emerald-200" },
+  "blog-title": { label: "Blog Titles", icon: Hash, color: "text-rose-700 bg-rose-50 border-rose-200" },
   image: { label: "AI Image", icon: ImageIcon, color: "text-emerald-700 bg-emerald-50 border-emerald-200" },
   "remove-background": { label: "BG Removal", icon: Eraser, color: "text-orange-700 bg-orange-50 border-orange-200" },
   "object-removal": { label: "Inpaint Object", icon: Scissors, color: "text-rose-700 bg-rose-50 border-rose-200" },
@@ -94,11 +94,11 @@ export function CreationsLibrary({ initialCreations = [] }: { initialCreations: 
   ];
 
   return (
-    <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6">
+    <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-white/90 ring-1 ring-emerald-950/[0.05] shadow-xl space-y-6">
       {/* Top Header & Search Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
         <div className="flex items-center gap-2.5">
-          <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center shadow-xs">
+          <div className="w-10 h-10 rounded-xl bg-teal-50 border border-teal-200 text-teal-600 flex items-center justify-center shadow-xs">
             <Clock className="w-5 h-5" />
           </div>
           <div>
@@ -117,7 +117,7 @@ export function CreationsLibrary({ initialCreations = [] }: { initialCreations: 
             placeholder="Search creations or prompts..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-medium"
+            className="w-full pl-9 pr-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 font-medium"
           />
         </div>
       </div>
@@ -130,7 +130,7 @@ export function CreationsLibrary({ initialCreations = [] }: { initialCreations: 
             onClick={() => setActiveFilter(cat.id)}
             className={`whitespace-nowrap px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
               activeFilter === cat.id
-                ? "bg-indigo-600 text-white shadow-xs"
+                ? "bg-teal-600 text-white shadow-xs"
                 : "bg-slate-50 text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200"
             }`}
           >

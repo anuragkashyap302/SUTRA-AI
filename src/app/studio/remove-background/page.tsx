@@ -52,24 +52,28 @@ export default function RemoveBackgroundPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50/70 via-white to-orange-50/50 p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+    <div className="min-h-screen bg-transparent p-4 sm:p-6 lg:p-8 relative">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Studio Header */}
-        <div className="flex items-center gap-3.5 pb-6 border-b border-amber-100">
-          <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/20 text-white">
-            <Eraser className="w-7 h-7" />
-          </div>
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100/80 text-amber-800 border border-amber-200 text-xs font-bold mb-1 shadow-xs">
-              <Sparkles className="w-3 h-3 text-amber-600" />
-              Alpha Transparency Isolation
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-amber-200/80">
+          <div className="flex items-start sm:items-center gap-3.5">
+            <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center shadow-md shadow-amber-500/20 text-white shrink-0">
+              <Eraser className="w-6 h-6" />
             </div>
-            <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-amber-700 via-orange-600 to-rose-600 bg-clip-text text-transparent">
-              AI Background Removal
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-600 mt-0.5 font-medium">
-              Instantly erase image backgrounds with pixel-perfect precision using Cloudinary AI.
-            </p>
+            <div>
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-amber-100/90 text-amber-900 border border-amber-200/90 text-[11px] font-bold mb-1 shadow-2xs backdrop-blur-xs">
+                  <Sparkles className="w-3 h-3 text-amber-600" />
+                  Alpha Transparency Isolation
+                </div>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-amber-700 via-orange-600 to-rose-600 bg-clip-text text-transparent leading-snug pb-0.5">
+                AI Background Removal
+              </h1>
+              <p className="text-slate-600 text-xs sm:text-sm mt-1 leading-relaxed font-medium">
+                Instantly erase image backgrounds with pixel-perfect precision using Cloudinary AI.
+              </p>
+            </div>
           </div>
         </div>
 

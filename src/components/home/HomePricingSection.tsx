@@ -132,11 +132,10 @@ export function HomePricingSection() {
         {plans.map((plan) => (
           <div
             key={plan.name}
-            className={`rounded-3xl p-6 sm:p-7 flex flex-col justify-between transition-all relative ${
-              plan.highlighted
+            className={`rounded-3xl p-6 sm:p-7 flex flex-col justify-between transition-all relative ${plan.highlighted
                 ? "bg-white border-2 border-emerald-500 shadow-2xl shadow-emerald-500/15 scale-[1.03] ring-4 ring-emerald-500/10"
                 : "bg-white/95 rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-emerald-200 transition-all"
-            }`}
+              }`}
           >
             {plan.highlighted && (
               <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 text-white text-[10px] font-black uppercase tracking-wider shadow-md shadow-emerald-600/30 flex items-center gap-1 whitespace-nowrap">
@@ -181,11 +180,10 @@ export function HomePricingSection() {
             ) : isSignedIn ? (
               <button
                 onClick={() => handleOpenBilling(plan.name)}
-                className={`mt-6 w-full py-3.5 rounded-xl text-xs font-bold text-center transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                  plan.highlighted
+                className={`mt-6 w-full py-3.5 rounded-xl text-xs font-bold text-center transition-all flex items-center justify-center gap-1.5 cursor-pointer ${plan.highlighted
                     ? "bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white shadow-lg shadow-emerald-600/25 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
                     : "bg-slate-900 hover:bg-emerald-950 text-white border border-slate-800 hover:border-emerald-500 shadow-md hover:scale-[1.02] active:scale-[0.98]"
-                }`}
+                  }`}
               >
                 Subscribe via Clerk
                 <ExternalLink className="w-3.5 h-3.5 ml-0.5" />
@@ -193,11 +191,10 @@ export function HomePricingSection() {
             ) : (
               <SignInButton mode="modal">
                 <button
-                  className={`mt-6 w-full py-3.5 rounded-xl text-xs font-bold text-center transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                    plan.highlighted
+                  className={`mt-6 w-full py-3.5 rounded-xl text-xs font-bold text-center transition-all flex items-center justify-center gap-1.5 cursor-pointer ${plan.highlighted
                       ? "bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white shadow-lg shadow-emerald-600/25"
                       : "bg-slate-900 hover:bg-emerald-950 text-white border border-slate-800"
-                  }`}
+                    }`}
                 >
                   Sign In to Subscribe
                   <ArrowRight className="w-3.5 h-3.5 ml-0.5" />

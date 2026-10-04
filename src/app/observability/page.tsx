@@ -115,7 +115,7 @@ export default function ObservabilityDashboardPage() {
           </button>
           <button
             onClick={exportTracesJson}
-            className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 rounded-xl shadow-md shadow-indigo-600/20 transition-all cursor-pointer active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 rounded-xl shadow-md shadow-teal-600/20 transition-all cursor-pointer active:scale-95"
           >
             <Download className="w-4 h-4" /> Export Traces (JSON)
           </button>
@@ -125,10 +125,10 @@ export default function ObservabilityDashboardPage() {
       {/* 4 Flagship Metric KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Tokens Card */}
-        <div className="p-5 rounded-3xl bg-white border border-slate-200/80 shadow-sm relative overflow-hidden group hover:border-indigo-300 transition-all">
+        <div className="p-5 rounded-3xl bg-white border border-slate-200/80 shadow-sm relative overflow-hidden group hover:border-teal-300 transition-all">
           <div className="flex items-center justify-between text-slate-500 mb-3">
             <span className="text-xs font-bold uppercase tracking-wider">Total Tokens Processed</span>
-            <Layers className="w-4 h-4 text-indigo-600" />
+            <Layers className="w-4 h-4 text-teal-600" />
           </div>
           <div className="text-2xl font-black text-slate-900 mb-1">
             {summary.totalTokens.toLocaleString()}
@@ -161,10 +161,10 @@ export default function ObservabilityDashboardPage() {
         </div>
 
         {/* Success Rate */}
-        <div className="p-5 rounded-3xl bg-white border border-slate-200/80 shadow-sm relative overflow-hidden group hover:border-purple-300 transition-all">
+        <div className="p-5 rounded-3xl bg-white border border-slate-200/80 shadow-sm relative overflow-hidden group hover:border-emerald-300 transition-all">
           <div className="flex items-center justify-between text-slate-500 mb-3">
             <span className="text-xs font-bold uppercase tracking-wider">Inference Success Rate</span>
-            <ShieldCheck className="w-4 h-4 text-purple-600" />
+            <ShieldCheck className="w-4 h-4 text-emerald-600" />
           </div>
           <div className="text-2xl font-black text-slate-900 mb-1">{summary.successRate}%</div>
           <p className="text-xs text-emerald-600 font-bold">0 Fatal Execution Errors</p>
@@ -177,7 +177,7 @@ export default function ObservabilityDashboardPage() {
         <div className="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-sm lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-indigo-600" /> Token Volume By Model
+              <Cpu className="w-4 h-4 text-teal-600" /> Token Volume By Model
             </h3>
             <span className="text-xs text-slate-500 font-mono font-medium">
               {Object.keys(modelStats).length} Active Endpoints
@@ -197,7 +197,7 @@ export default function ObservabilityDashboardPage() {
                   </div>
                   <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-indigo-500 to-teal-500 rounded-full transition-all duration-500"
+                      className="h-full bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full transition-all duration-500"
                       style={{ width: `${Math.max(5, pct)}%` }}
                     />
                   </div>
@@ -208,9 +208,9 @@ export default function ObservabilityDashboardPage() {
         </div>
 
         {/* Observability Standards Card */}
-        <div className="p-6 rounded-3xl bg-gradient-to-br from-indigo-50/80 via-white to-purple-50/80 border border-indigo-100 shadow-sm flex flex-col justify-between space-y-4">
+        <div className="p-6 rounded-3xl bg-gradient-to-br from-teal-50/80 via-white to-emerald-50/80 border border-teal-100 shadow-sm flex flex-col justify-between space-y-4">
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-indigo-700 text-xs font-bold uppercase tracking-wider">
+            <div className="flex items-center gap-2 text-teal-700 text-xs font-bold uppercase tracking-wider">
               <ShieldCheck className="w-4 h-4" /> Production Telemetry Design
             </div>
             <h4 className="text-base font-extrabold text-slate-900">Full-Trace Langfuse / OpenTelemetry Compliance</h4>
@@ -220,7 +220,7 @@ export default function ObservabilityDashboardPage() {
             </p>
           </div>
 
-          <div className="pt-3 border-t border-indigo-100 flex items-center justify-between text-xs text-slate-500 font-medium">
+          <div className="pt-3 border-t border-teal-100 flex items-center justify-between text-xs text-slate-500 font-medium">
             <span>Latency SLA: &lt; 2.5s</span>
             <span className="text-emerald-700 font-bold">Grounded & Verified</span>
           </div>
@@ -244,7 +244,7 @@ export default function ObservabilityDashboardPage() {
                 onClick={() => setSelectedStudioFilter(tab.id)}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                   selectedStudioFilter === tab.id
-                    ? "bg-indigo-600 text-white shadow-xs"
+                    ? "bg-teal-600 text-white shadow-xs"
                     : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                 }`}
               >
@@ -261,7 +261,7 @@ export default function ObservabilityDashboardPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search prompts, models, keywords..."
-              className="w-full pl-9 pr-4 py-2 text-xs rounded-2xl bg-white border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-xs font-medium"
+              className="w-full pl-9 pr-4 py-2 text-xs rounded-2xl bg-white border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 shadow-xs font-medium"
             />
           </div>
         </div>
@@ -296,7 +296,7 @@ export default function ObservabilityDashboardPage() {
                         className="hover:bg-slate-50/80 transition-colors group"
                       >
                         <td className="p-4 space-y-1">
-                          <span className="inline-block px-2.5 py-0.5 text-[11px] font-bold rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200">
+                          <span className="inline-block px-2.5 py-0.5 text-[11px] font-bold rounded-md bg-teal-50 text-teal-700 border border-teal-200">
                             {trace.studio}
                           </span>
                           <p className="text-[10px] font-mono text-slate-400 font-medium">{trace.model}</p>

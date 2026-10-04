@@ -22,14 +22,10 @@
 }
 
 body {
-  background-color: #f8fafc;
+  background-color: #f7fcf9;
   color: #0f172a;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   overflow-x: hidden;
-  background-image: 
-    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.04) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.03) 0px, transparent 50%);
-  background-attachment: fixed;
 }
 
 /* Modern Frosted Glassmorphism for Light Mode */
@@ -70,7 +66,7 @@ body {
 /* Subtle Light Grid Pattern */
 .bg-grid-pattern {
   background-size: 32px 32px;
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(15, 23, 42, 0.03) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
 }
@@ -96,14 +92,23 @@ body {
 
 /* Animations inspired by dummyStyles */
 @keyframes borderFlow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .animated-border {
   position: relative;
 }
+
 .animated-border::before {
   content: '';
   position: absolute;
@@ -111,7 +116,7 @@ body {
   z-index: 0;
   border-radius: 1.5rem;
   padding: 1.5px;
-  background: linear-gradient(90deg, #10b981, #06b6d4, #6366f1, #ec4899, #10b981);
+  background: linear-gradient(90deg, #10b981, #06b6d4, #14b8a6, #f43f5e, #10b981);
   background-size: 300% 100%;
   animation: borderFlow 8s linear infinite;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -122,23 +127,124 @@ body {
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
 }
+
 .animate-float {
   animation: float 4s ease-in-out infinite;
 }
 
 @keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
+
 .animate-marquee {
   display: flex;
   width: max-content;
   animation: marquee 35s linear infinite;
 }
+
 .animate-marquee:hover {
   animation-play-state: paused;
 }
 
+/* Ambient Background Animations (Living Organic Bloblies) */
+@keyframes ambientDrift1 {
+  0% {
+    transform: translate(0px, 0px) scale(1) rotate(0deg);
+    border-radius: 60% 40% 50% 50% / 50% 60% 40% 50%;
+  }
+
+  33% {
+    transform: translate(45px, -30px) scale(1.10) rotate(4deg);
+    border-radius: 45% 55% 60% 40% / 55% 45% 50% 50%;
+  }
+
+  66% {
+    transform: translate(-30px, 35px) scale(0.94) rotate(-3deg);
+    border-radius: 50% 50% 40% 60% / 40% 55% 45% 60%;
+  }
+
+  100% {
+    transform: translate(25px, -15px) scale(1.05) rotate(2deg);
+    border-radius: 60% 40% 50% 50% / 50% 60% 40% 50%;
+  }
+}
+
+@keyframes ambientDrift2 {
+  0% {
+    transform: translate(0px, 0px) scale(1) rotate(0deg);
+    border-radius: 40% 60% 60% 40% / 60% 40% 50% 50%;
+  }
+
+  33% {
+    transform: translate(-40px, 30px) scale(1.08) rotate(-4deg);
+    border-radius: 55% 45% 40% 60% / 45% 55% 60% 40%;
+  }
+
+  66% {
+    transform: translate(35px, -25px) scale(0.95) rotate(3deg);
+    border-radius: 50% 50% 60% 40% / 50% 45% 55% 50%;
+  }
+
+  100% {
+    transform: translate(-20px, 20px) scale(1.04) rotate(-2deg);
+    border-radius: 40% 60% 60% 40% / 60% 40% 50% 50%;
+  }
+}
+
+@keyframes ambientPulse {
+
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translate(-50%, 0) scale(1);
+    border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%;
+  }
+
+  50% {
+    opacity: 0.85;
+    transform: translate(-50%, 0) scale(1.10);
+    border-radius: 55% 45% 50% 50% / 48% 52% 48% 52%;
+  }
+}
+
+.animate-ambient-drift-1 {
+  animation: ambientDrift1 20s ease-in-out infinite alternate;
+  will-change: transform, border-radius;
+}
+
+.animate-ambient-drift-2 {
+  animation: ambientDrift2 24s ease-in-out infinite alternate;
+  will-change: transform, border-radius;
+}
+
+.animate-ambient-pulse {
+  animation: ambientPulse 16s ease-in-out infinite alternate;
+  will-change: transform, opacity, border-radius;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .animate-ambient-drift-1,
+  .animate-ambient-drift-2,
+  .animate-ambient-pulse,
+  .animate-float,
+  .animated-border::before {
+    animation: none !important;
+  }
+}

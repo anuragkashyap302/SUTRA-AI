@@ -12,7 +12,7 @@ export function TelemetryFloatingButton() {
   return (
     <button
       onClick={() => setDrawerOpen(true)}
-      className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200 hover:border-indigo-400 shadow-xl shadow-slate-900/10 group transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer"
+      className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200 hover:border-emerald-400 shadow-xl shadow-slate-900/10 group transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer"
       title="Open Real-Time LLM Observability & Developer Telemetry Drawer"
     >
       <div className="relative flex items-center justify-center">

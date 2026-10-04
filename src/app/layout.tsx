@@ -8,6 +8,7 @@ import { getOrCreateCurrentUser } from "@/lib/auth";
 import { TelemetryProvider } from "@/context/TelemetryContext";
 import { TelemetryDrawer } from "@/components/telemetry/TelemetryDrawer";
 import { TelemetryFloatingButton } from "@/components/telemetry/TelemetryFloatingButton";
+import { AmbientBackground } from "@/components/layout/AmbientBackground";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,11 +22,12 @@ export const metadata: Metadata = {
  * Root Layout (Server Component)
  * 
  * Ye component puri application ko wrap karta hai:
- * 1. ClerkProvider: Authentication context provide karta hai with dark theme
+ * 1. ClerkProvider: Authentication context provide karta hai with emerald theme
  * 2. TelemetryProvider: Real-time LLM observability, TTFT latency & token accounting
  * 3. getOrCreateCurrentUser: Agar user login hai, toh Neon DB se credits fetch karta hai
- * 4. Navbar & Footer: Global navigation structure
- * 5. Toaster: Beautiful toast alerts
+ * 4. AmbientBackground: Living organic emerald ambient canvas seamlessly behind navbar
+ * 5. Navbar & Footer: Global navigation structure with floating fixed glassmorphism
+ * 6. Toaster: Beautiful toast alerts
  */
 export default async function RootLayout({
   children,
@@ -48,7 +50,7 @@ export default async function RootLayout({
     <ClerkProvider
       appearance={{
         variables: {
-          colorPrimary: "#4f46e5",
+          colorPrimary: "#059669",
           colorBackground: "#ffffff",
           colorInputBackground: "#f8fafc",
           colorInputText: "#0f172a",
@@ -56,10 +58,11 @@ export default async function RootLayout({
       }}
     >
       <html lang="en" className="scroll-smooth">
-        <body className="min-h-screen flex flex-col bg-[#f8fafc] text-slate-900 antialiased selection:bg-indigo-100 selection:text-indigo-800">
+        <body className="min-h-screen flex flex-col bg-[#f7fcf9] text-slate-900 antialiased selection:bg-emerald-100 selection:text-emerald-800 relative">
           <TelemetryProvider>
+            <AmbientBackground />
             <Navbar credits={userCredits} />
-            <main className="flex-1 flex flex-col">{children}</main>
+            <main className="flex-1 flex flex-col pt-20 sm:pt-24">{children}</main>
             <Footer />
             <TelemetryDrawer />
             <TelemetryFloatingButton />
