@@ -40,7 +40,7 @@ export function Navbar({ credits: initialCredits = 20 }: { credits?: number }) {
   }, []);
 
   const navLinks = [
-    { name: "Hybrid RAG", href: "/studio/rag", icon: FileSearch, color: "text-rose-500" },
+    { name: "Hybrid RAG", href: "/studio/rag", icon: FileSearch, color: "text-emerald-600" },
     { name: "Articles", href: "/studio/article", icon: SquarePen, color: "text-teal-600" },
     { name: "AI Images", href: "/studio/image", icon: ImageIcon, color: "text-emerald-500" },
     { name: "Inpaint", href: "/studio/remove-object", icon: Scissors, color: "text-cyan-600" },

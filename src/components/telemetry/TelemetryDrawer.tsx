@@ -74,7 +74,7 @@ export function TelemetryDrawer() {
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-base font-extrabold text-slate-900 tracking-tight">
-                  LLM Observability Drawer
+                  <span className="text-emerald-700">LLM</span> Observability Drawer
                 </h2>
                 <span className="px-2 py-0.5 text-[10px] font-bold bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full">
                   LIVE TRACING

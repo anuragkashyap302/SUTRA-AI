@@ -165,7 +165,7 @@ export function Footer() {
               </a>
 
               <p className="text-[11px] text-slate-400 font-medium">
-                Built with Next.js 15 App Router, TypeScript, Tailwind CSS, Prisma & Gemini 3.6 Flash.
+                Built with Next.js 15 App Router, TypeScript, Tailwind CSS, Drizzle ORM & Gemini 3.8 Flash.
               </p>
             </div>
           </div>

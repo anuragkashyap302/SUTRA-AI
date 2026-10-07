@@ -7,6 +7,7 @@ import type { NextConfig } from "next";
  * - typescript ka types folder bana lena usme sab rakhna types ko
  */
 const nextConfig: NextConfig = {
+  serverExternalPackages: ["pdf-parse", "pdfjs-dist"],
   experimental: {
     // lucide-react ko optimize karne ke liye isko add kiya gya hai 
     // AST (Abstract Syntax Tree) ki help se lucide-react ko optimize kiya jata hai 

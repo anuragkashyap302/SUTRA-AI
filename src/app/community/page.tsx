@@ -37,7 +37,7 @@ export default async function CommunityPage() {
             <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
             AI Visual Showcase
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Community Visual Gallery</h1>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900"><span className="text-emerald-700">Community</span> Visual Gallery</h1>
           <p className="text-slate-500 text-xs sm:text-sm mt-1 font-medium">
             Explore public AI diffusion images and canvas inpaintings. Remix any visual prompt in 1-click.
           </p>

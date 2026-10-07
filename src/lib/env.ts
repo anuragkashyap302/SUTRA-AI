@@ -12,7 +12,7 @@ const envSchema = z.object({
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1, "Clerk publishable key is required"),
   CLERK_SECRET_KEY: z.string().min(1, "Clerk secret key is required"),
   GEMINI_API_KEY: z.string().min(1, "GEMINI_API_KEY is required"),
-  GEMINI_MODEL: z.string().default("gemini-3.6-flash"),
+  GEMINI_MODEL: z.string().default("gemini-3.8-flash"),
   CLIP_DROP_API_KEY: z.string().optional(),
   CLOUDINARY_CLOUD_NAME: z.string().optional(),
   CLOUDINARY_API_KEY: z.string().optional(),

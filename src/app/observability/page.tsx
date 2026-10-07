@@ -145,7 +145,7 @@ export default function ObservabilityDashboardPage() {
           <div className="text-2xl font-black text-emerald-700 mb-1">
             ${summary.totalCostUsd.toFixed(5)} <span className="text-xs font-normal text-slate-400">USD</span>
           </div>
-          <p className="text-xs text-slate-500 font-medium">Gemini 3.6 Flash + Vision API rates</p>
+          <p className="text-xs text-slate-500 font-medium">Gemini 3.8 Flash + Vision API rates</p>
         </div>
 
         {/* Average Latency */}

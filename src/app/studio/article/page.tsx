@@ -146,7 +146,7 @@ export default function ArticleStudioPage() {
       // Record Telemetry
       addTrace({
         studio: "Article Studio",
-        model: "gemini-3.6-flash",
+        model: "gemini-3.8-flash",
         latencyMs,
         ttftMs: Math.round(latencyMs * 0.25),
         promptTokens,
@@ -172,7 +172,7 @@ export default function ArticleStudioPage() {
 
       addTrace({
         studio: "Article Studio",
-        model: "gemini-3.6-flash",
+        model: "gemini-3.8-flash",
         latencyMs,
         promptTokens: estimateTokens(prompt),
         completionTokens: 0,
@@ -235,7 +235,7 @@ export default function ArticleStudioPage() {
 
       addTrace({
         studio: "Article Studio (Refactor)",
-        model: "gemini-3.6-flash",
+        model: "gemini-3.8-flash",
         latencyMs,
         ttftMs: Math.round(latencyMs * 0.2),
         promptTokens,
@@ -258,7 +258,7 @@ export default function ArticleStudioPage() {
 
       addTrace({
         studio: "Article Studio (Refactor)",
-        model: "gemini-3.6-flash",
+        model: "gemini-3.8-flash",
         latencyMs,
         promptTokens: estimateTokens(generatedArticle),
         completionTokens: 0,
@@ -409,7 +409,7 @@ export default function ArticleStudioPage() {
                   placeholder="e.g. Next-Gen Enterprise AI Architecture in 2026"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-4 py-3 rounded-full bg-white border-2 border-blue-100 text-slate-900 text-xs sm:text-sm placeholder:text-slate-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 shadow-xs transition-all font-medium"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200/90 text-slate-900 text-xs sm:text-sm placeholder:text-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 shadow-2xs transition-all font-medium"
                 />
               </div>
 
@@ -424,7 +424,7 @@ export default function ArticleStudioPage() {
                   placeholder="Describe what you want to write about, including specific sub-sections, target audience, and key metrics..."
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl bg-white border-2 border-blue-100 text-slate-900 text-xs sm:text-sm placeholder:text-slate-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 resize-none shadow-xs transition-all font-medium"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200/90 text-slate-900 text-xs sm:text-sm placeholder:text-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 resize-none shadow-2xs transition-all font-medium"
                 />
               </div>
 
@@ -434,57 +434,94 @@ export default function ArticleStudioPage() {
                   Tone of Voice
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {TONE_OPTIONS.map((t) => (
-                    <button
-                      type="button"
-                      key={t.id}
-                      onClick={() => setTone(t.id)}
-                      className={`p-2.5 rounded-2xl text-left border-2 transition-all cursor-pointer ${tone === t.id
-                          ? "bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-600/20 scale-[1.02]"
-                          : "bg-white border-slate-200/80 text-slate-700 hover:text-blue-900 hover:bg-slate-50 hover:border-slate-300"
+                  {TONE_OPTIONS.map((t) => {
+                    const isSelected = tone === t.id;
+                    return (
+                      <button
+                        type="button"
+                        key={t.id}
+                        onClick={() => setTone(t.id)}
+                        className={`p-2.5 rounded-xl text-left border transition-all cursor-pointer ${
+                          isSelected
+                            ? "bg-blue-50/80 border-blue-500 text-blue-900 shadow-2xs"
+                            : "bg-slate-50/60 hover:bg-slate-100/70 border-slate-200/80 text-slate-700"
                         }`}
-                    >
-                      <div className="text-xs font-bold">{t.label}</div>
-                      <div className={`text-[10px] leading-tight mt-0.5 truncate font-medium ${tone === t.id ? "text-blue-100" : "text-slate-500"}`}>
-                        {t.desc}
-                      </div>
-                    </button>
-                  ))}
+                      >
+                        <div className={`text-xs ${isSelected ? "font-bold text-blue-900" : "font-semibold text-slate-800"}`}>
+                          {t.label}
+                        </div>
+                        <div className={`text-[10px] mt-0.5 leading-tight ${isSelected ? "text-blue-600 font-medium" : "text-slate-400"}`}>
+                          {t.desc}
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Target Audience & Keywords */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                    Target Audience
-                  </label>
-                  <select
-                    value={targetAudience}
-                    onChange={(e) => setTargetAudience(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-full bg-white border-2 border-blue-100 text-slate-900 text-xs font-semibold focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 shadow-xs cursor-pointer"
-                  >
-                    {AUDIENCE_OPTIONS.map((aud) => (
-                      <option key={aud} value={aud} className="bg-white text-slate-900">
+              {/* Target Audience (Selectable Pills) */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                  Target Audience
+                </label>
+                <div className="flex flex-wrap gap-1.5">
+                  {AUDIENCE_OPTIONS.map((aud) => {
+                    const isSelected = targetAudience === aud;
+                    return (
+                      <button
+                        type="button"
+                        key={aud}
+                        onClick={() => setTargetAudience(aud)}
+                        className={`px-3 py-1.5 rounded-xl text-xs transition-all cursor-pointer border ${
+                          isSelected
+                            ? "bg-blue-50/80 border-blue-500 text-blue-900 font-bold shadow-2xs"
+                            : "bg-slate-50/60 hover:bg-slate-100/70 border-slate-200/80 text-slate-600 font-medium"
+                        }`}
+                      >
                         {aud}
-                      </option>
-                    ))}
-                  </select>
+                      </button>
+                    );
+                  })}
                 </div>
+              </div>
 
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                    Word Length (~tokens)
+              {/* Word Length (Selectable Pills) */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Word Length
                   </label>
-                  <select
-                    value={length}
-                    onChange={(e) => setLength(Number(e.target.value))}
-                    className="w-full px-4 py-2.5 rounded-full bg-white border-2 border-blue-100 text-slate-900 text-xs font-semibold focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 shadow-xs cursor-pointer"
-                  >
-                    <option value={500}>Short Form (~500 tokens)</option>
-                    <option value={800}>Standard (~800 tokens)</option>
-                    <option value={1500}>Long-Form (~1500 tokens)</option>
-                  </select>
+                  <span className="text-[11px] font-mono text-slate-500 font-medium">
+                    ~{length} tokens
+                  </span>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { val: 500, label: "Short Form", desc: "~500 tok" },
+                    { val: 800, label: "Standard", desc: "~800 tok" },
+                    { val: 1500, label: "Long-Form", desc: "~1500 tok" },
+                  ].map((item) => {
+                    const isSelected = length === item.val;
+                    return (
+                      <button
+                        type="button"
+                        key={item.val}
+                        onClick={() => setLength(item.val)}
+                        className={`p-2 rounded-xl text-center transition-all cursor-pointer border ${
+                          isSelected
+                            ? "bg-blue-50/80 border-blue-500 text-blue-900 font-bold shadow-2xs"
+                            : "bg-slate-50/60 hover:bg-slate-100/70 border-slate-200/80 text-slate-600 font-medium"
+                        }`}
+                      >
+                        <div className={`text-xs ${isSelected ? "font-bold text-blue-900" : "font-semibold text-slate-800"}`}>
+                          {item.label}
+                        </div>
+                        <div className={`text-[10px] mt-0.5 ${isSelected ? "text-blue-600 font-medium" : "text-slate-400"}`}>
+                          {item.desc}
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -498,7 +535,7 @@ export default function ArticleStudioPage() {
                   placeholder="e.g. pgvector, next.js 15, hybrid rag, sub-50ms"
                   value={keywords}
                   onChange={(e) => setKeywords(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-full bg-white border-2 border-blue-100 text-slate-900 text-xs placeholder:text-slate-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 shadow-xs transition-all font-medium"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200/90 text-slate-900 text-xs sm:text-sm placeholder:text-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 shadow-2xs transition-all font-medium"
                 />
               </div>
 
@@ -511,7 +548,7 @@ export default function ArticleStudioPage() {
                 {isGenerating ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Synthesizing with Gemini 3.6 Flash...
+                    Synthesizing with Gemini 3.8 Flash...
                   </>
                 ) : (
                   <>
@@ -703,7 +740,7 @@ export default function ArticleStudioPage() {
               {isGenerating ? (
                 <div className="flex flex-col items-center justify-center h-full text-slate-500 text-xs gap-3">
                   <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-                  <p className="text-sm font-bold text-slate-800">Synthesizing Content with Gemini 3.6 Flash...</p>
+                  <p className="text-sm font-bold text-slate-800">Synthesizing Content with Gemini 3.8 Flash...</p>
                   <p className="text-xs text-slate-500 font-medium">Applying tone: {tone} • Audience: {targetAudience}</p>
                 </div>
               ) : isRefactoring ? (

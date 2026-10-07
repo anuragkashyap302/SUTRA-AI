@@ -123,3 +123,22 @@ export async function deductUserCredits(userId: string, cost: number = 1): Promi
 
   return { success: true, remainingCredits: updatedUser.credits };
 }
+
+/**
+ * Refund Credits Atomically
+ * 
+ * Agar upstream AI API fail ho jaye, toh deducted credit user ke account me wapas credit ho jata hai.
+ */
+export async function refundUserCredits(userId: string, cost: number = 1): Promise<void> {
+  try {
+    await db
+      .update(users)
+      .set({
+        credits: sql`${users.credits} + ${cost}`,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId));
+  } catch (err) {
+    console.error("Failed to refund user credits:", err);
+  }
+}

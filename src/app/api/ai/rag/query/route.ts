@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { ai, DEFAULT_AI_MODEL } from "@/lib/ai";
+import { ai, DEFAULT_AI_MODEL, generateContentWithFallback } from "@/lib/ai";
 import { generateEmbedding } from "@/lib/embeddings";
 import { searchHybridChunks } from "@/lib/rag";
 import { db } from "@/db";
 import { creations } from "@/db/schema";
-import { deductUserCredits } from "@/lib/auth";
+import { deductUserCredits, refundUserCredits } from "@/lib/auth";
 
 export const maxDuration = 45;
 
@@ -74,8 +74,7 @@ DOCUMENT CONTEXT:
 ${contextText}`;
 
     // 4. Generate grounded response with Gemini
-    const response = await ai.models.generateContent({
-      model: DEFAULT_AI_MODEL,
+    const response = await generateContentWithFallback({
       contents: [
         { role: "user", parts: [{ text: `${systemPrompt}\n\nUSER QUESTION: ${query}` }] },
       ],
@@ -123,6 +122,10 @@ ${contextText}`;
     });
   } catch (error: unknown) {
     console.error("RAG Query Error:", error);
+    try {
+      const { userId } = await auth();
+      if (userId) await refundUserCredits(userId, 1);
+    } catch {}
     const errorMessage = error instanceof Error ? error.message : "Failed to execute document query";
     return NextResponse.json({ success: false, error: errorMessage }, { status: 500 });
   }

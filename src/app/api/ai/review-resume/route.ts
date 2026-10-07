@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { PDFParse } from "pdf-parse";
-import { ai, DEFAULT_AI_MODEL } from "@/lib/ai";
+import { PDFParse } from "@/lib/pdf";
+import { ai, DEFAULT_AI_MODEL, generateContentWithFallback } from "@/lib/ai";
 import { db } from "@/db";
 import { creations } from "@/db/schema";
-import { deductUserCredits } from "@/lib/auth";
+import { deductUserCredits, refundUserCredits } from "@/lib/auth";
 
 /**
  * POST /api/ai/review-resume
@@ -48,17 +48,16 @@ export async function POST(req: NextRequest) {
 
     const prompt = `You are a senior tech recruiter and resume reviewer at a top Silicon Valley company. Review this resume in detail.
 Provide structured markdown feedback containing:
-1. 🎯 Overall Impression & ATS Compatibility Score (out of 100)
-2. 💪 Top Strengths
-3. ⚠️ Critical Weaknesses & Red Flags
-4. 🚀 Actionable Line-by-Line Bullet Point Improvements (Quantify impact with metrics)
-5. 💡 Recommended Next Steps & Interview Preparation Tips
+1. Overall Impression & ATS Compatibility Score (out of 100)
+2. Top Strengths
+3. Critical Weaknesses & Red Flags
+4. Actionable Line-by-Line Bullet Point Improvements (Quantify impact with metrics)
+5. Recommended Next Steps & Interview Preparation Tips
 
 Resume Text:
 ${resumeText}`;
 
-    const response = await ai.models.generateContent({
-      model: DEFAULT_AI_MODEL,
+    const response = await generateContentWithFallback({
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       config: {
         temperature: 0.7,
@@ -89,6 +88,10 @@ ${resumeText}`;
     });
   } catch (error: unknown) {
     console.error("Resume review error:", error);
+    try {
+      const { userId } = await auth();
+      if (userId) await refundUserCredits(userId, 1);
+    } catch {}
     const errorMessage = error instanceof Error ? error.message : "Failed to review resume";
     return NextResponse.json({ success: false, error: errorMessage }, { status: 500 });
   }

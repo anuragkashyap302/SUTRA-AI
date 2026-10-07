@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
-import { ai, DEFAULT_AI_MODEL } from "@/lib/ai";
-import { deductUserCredits } from "@/lib/auth";
+import { ai, DEFAULT_AI_MODEL, generateContentWithFallback } from "@/lib/ai";
+import { deductUserCredits, refundUserCredits } from "@/lib/auth";
 
 const refactorSchema = z.object({
   content: z.string().min(20, "Content must have at least 20 characters to refactor"),
@@ -97,8 +97,7 @@ Followed by the original article with lightly optimized keyword headings.`;
 
     const fullPrompt = `${actionPrompt}\n\nORIGINAL ARTICLE:\n${content}\n\nOUTPUT: Return the refactored text in clean markdown only without preamble.`;
 
-    const response = await ai.models.generateContent({
-      model: DEFAULT_AI_MODEL,
+    const response = await generateContentWithFallback({
       contents: [{ role: "user", parts: [{ text: fullPrompt }] }],
       config: {
         temperature: 0.5,
@@ -117,6 +116,17 @@ Followed by the original article with lightly optimized keyword headings.`;
     });
   } catch (error: unknown) {
     console.error("Refactor error:", error);
+
+    // Auto-refund user credit on failure
+    try {
+      const { userId } = await auth();
+      if (userId) {
+        await refundUserCredits(userId, 1);
+      }
+    } catch (refundErr) {
+      console.warn("Failed to refund credit:", refundErr);
+    }
+
     const errorMessage = error instanceof Error ? error.message : "Failed to refactor content";
     return NextResponse.json({ success: false, error: errorMessage }, { status: 500 });
   }

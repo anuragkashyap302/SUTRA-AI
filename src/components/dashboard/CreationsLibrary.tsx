@@ -86,11 +86,11 @@ export function CreationsLibrary({ initialCreations = [] }: { initialCreations: 
 
   const categories = [
     { id: "all", label: "All Items", count: creationsList.length },
-    { id: "article", label: "✍️ Articles", count: creationsList.filter((c) => c.type === "article").length },
-    { id: "document-rag", label: "🧠 Hybrid RAG", count: creationsList.filter((c) => c.type === "document-rag").length },
-    { id: "image", label: "🎨 AI Images", count: creationsList.filter((c) => c.type === "image").length },
-    { id: "object-removal", label: "✂️ Inpainting", count: creationsList.filter((c) => c.type === "object-removal").length },
-    { id: "resume-review", label: "📄 Resume ATS", count: creationsList.filter((c) => c.type === "resume-review").length },
+    { id: "article", label: "Articles", count: creationsList.filter((c) => c.type === "article").length },
+    { id: "document-rag", label: "Hybrid RAG", count: creationsList.filter((c) => c.type === "document-rag").length },
+    { id: "image", label: "AI Images", count: creationsList.filter((c) => c.type === "image").length },
+    { id: "object-removal", label: "Inpainting", count: creationsList.filter((c) => c.type === "object-removal").length },
+    { id: "resume-review", label: "Resume ATS", count: creationsList.filter((c) => c.type === "resume-review").length },
   ];
 
   return (
@@ -98,11 +98,13 @@ export function CreationsLibrary({ initialCreations = [] }: { initialCreations: 
       {/* Top Header & Search Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
         <div className="flex items-center gap-2.5">
-          <div className="w-10 h-10 rounded-xl bg-teal-50 border border-teal-200 text-teal-600 flex items-center justify-center shadow-xs">
+          <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center shadow-xs">
             <Clock className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-900">Your Creation Library</h2>
+            <h2 className="text-lg font-bold text-slate-900">
+              Your <span className="text-emerald-700">Creation</span> Library
+            </h2>
             <p className="text-xs text-slate-500 font-medium">
               {creationsList.length} items persisted in Neon PostgreSQL
             </p>
@@ -117,7 +119,7 @@ export function CreationsLibrary({ initialCreations = [] }: { initialCreations: 
             placeholder="Search creations or prompts..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 font-medium"
+            className="w-full pl-9 pr-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 font-medium"
           />
         </div>
       </div>
@@ -128,16 +130,16 @@ export function CreationsLibrary({ initialCreations = [] }: { initialCreations: 
           <button
             key={cat.id}
             onClick={() => setActiveFilter(cat.id)}
-            className={`whitespace-nowrap px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+            className={`whitespace-nowrap px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
               activeFilter === cat.id
-                ? "bg-teal-600 text-white shadow-xs"
-                : "bg-slate-50 text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200"
+                ? "bg-emerald-50/90 text-emerald-900 border-2 border-emerald-500 font-bold shadow-xs"
+                : "bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200 font-medium"
             }`}
           >
             <span>{cat.label}</span>
             <span
               className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
-                activeFilter === cat.id ? "bg-white/25 text-white" : "bg-slate-200/70 text-slate-600"
+                activeFilter === cat.id ? "bg-emerald-200/80 text-emerald-900" : "bg-slate-100 text-slate-500"
               }`}
             >
               {cat.count}

@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
-import { ai, DEFAULT_AI_MODEL } from "@/lib/ai";
+import { ai, DEFAULT_AI_MODEL, generateContentWithFallback } from "@/lib/ai";
 import { db } from "@/db";
 import { creations } from "@/db/schema";
-import { deductUserCredits } from "@/lib/auth";
+import { deductUserCredits, refundUserCredits } from "@/lib/auth";
 
 const blogTitleSchema = z.object({
   prompt: z.string().min(3, "Topic prompt is required"),
@@ -39,8 +39,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: creditResult.error }, { status: 403 });
     }
 
-    const response = await ai.models.generateContent({
-      model: DEFAULT_AI_MODEL,
+    const response = await generateContentWithFallback({
       contents: [
         {
           role: "user",
@@ -75,6 +74,10 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error: unknown) {
+    try {
+      const { userId } = await auth();
+      if (userId) await refundUserCredits(userId, 1);
+    } catch {}
     const errorMessage = error instanceof Error ? error.message : "Internal server error";
     return NextResponse.json({ success: false, error: errorMessage }, { status: 500 });
   }

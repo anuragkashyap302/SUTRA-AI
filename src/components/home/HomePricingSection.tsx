@@ -49,7 +49,7 @@ export function HomePricingSection() {
       badge: "Free Forever",
       highlighted: false,
       features: [
-        "Gemini 3.6 Flash Articles & Titles",
+        "Gemini 3.8 Flash Articles & Titles",
         "Flagship Hybrid RAG (PDF Q&A)",
         "AI Image Gen & Object Removal",
         "ATS Resume Review & Feedback",
@@ -66,7 +66,7 @@ export function HomePricingSection() {
       badge: "Starter Pro",
       highlighted: false,
       features: [
-        "Gemini 3.6 Flash Articles & Titles",
+        "Gemini 3.8 Flash Articles & Titles",
         "Flagship Hybrid RAG (PDF Q&A)",
         "AI Image Gen & Object Removal",
         "ATS Resume Review & Feedback",
@@ -83,7 +83,7 @@ export function HomePricingSection() {
       badge: "Most Popular",
       highlighted: true,
       features: [
-        "Gemini 3.6 Flash Articles & Titles",
+        "Gemini 3.8 Flash Articles & Titles",
         "Flagship Hybrid RAG (PDF Q&A)",
         "AI Image Gen & Object Removal",
         "ATS Resume Review & Feedback",
@@ -100,7 +100,7 @@ export function HomePricingSection() {
       badge: "Scale & SLA",
       highlighted: false,
       features: [
-        "Gemini 3.6 Flash Articles & Titles",
+        "Gemini 3.8 Flash Articles & Titles",
         "Flagship Hybrid RAG (PDF Q&A)",
         "AI Image Gen & Object Removal",
         "ATS Resume Review & Feedback",

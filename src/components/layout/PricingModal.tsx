@@ -104,7 +104,7 @@ export function PricingModal({
       credits: "20 Daily Credits",
       badge: "Current Plan",
       features: [
-        "Gemini 3.6 Flash Articles & Titles",
+        "Gemini 3.8 Flash Articles & Titles",
         "Flagship Hybrid RAG (PDF Q&A)",
         "AI Image Gen & Object Removal",
         "ATS Resume Review & Feedback",
@@ -124,7 +124,7 @@ export function PricingModal({
       credits: "100 Monthly Credits",
       badge: "Starter Pro",
       features: [
-        "Gemini 3.6 Flash Articles & Titles",
+        "Gemini 3.8 Flash Articles & Titles",
         "Flagship Hybrid RAG (PDF Q&A)",
         "AI Image Gen & Object Removal",
         "ATS Resume Review & Feedback",
@@ -144,7 +144,7 @@ export function PricingModal({
       credits: "500 Monthly Credits",
       badge: "Most Popular",
       features: [
-        "Gemini 3.6 Flash Articles & Titles",
+        "Gemini 3.8 Flash Articles & Titles",
         "Flagship Hybrid RAG (PDF Q&A)",
         "AI Image Gen & Object Removal",
         "ATS Resume Review & Feedback",
@@ -164,7 +164,7 @@ export function PricingModal({
       credits: "Unlimited Credits",
       badge: "Scale & SLA",
       features: [
-        "Gemini 3.6 Flash Articles & Titles",
+        "Gemini 3.8 Flash Articles & Titles",
         "Flagship Hybrid RAG (PDF Q&A)",
         "AI Image Gen & Object Removal",
         "ATS Resume Review & Feedback",

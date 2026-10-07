@@ -43,6 +43,37 @@ export async function searchHybridChunks(
   `;
 
   // 2. Sparse Full-Text Search (BM25 via tsvector / plainto_tsquery)
+//   //tsvector — Document ko "Searchable Tokens" mein todna
+// Jab hum database me raw text store karte hain (jaise: "The cats were jumping over dogs"), toh database ko search karne ke liye har word ko scan karna slow hota hai.
+
+// to_tsvector('english', content) text ko normalize aur stem karke ek sorted list banata hai:
+
+// Stop words hata deta hai (the, were, over, is, a jaise useless words delete ho jaate hain).
+// Stemming karta hai (words ko unke root word me convert karta hai: jumping ko jump, cats ko  cat).
+// Word positions note karta hai (kaunsa word kis number par tha).
+
+
+ //plainto_tsquery — User ke Question ko Search Query banana
+ // Jab user type karta hai: "How many cats are in the document?", toh plainto_tsquery use hota hai.
+ // Yeh query ko clean karta hai aur "?" jaise symbols hata deta hai.
+
+// plainto_tsquery('english', 'How many cats are in the document?')  ➡️  'how & cat &  jump & dog'
+
+
+
+ //ts_rank_cd — Matching Words ka Score Calculate Karna
+// Jab dono tsvector (document) aur plainto_tsquery (question) ready ho jaate, ts_rank_cd match hone wale words ko score deta hai.
+
+// Formula (simplified): 
+// Score = (Common Words × 10) + (Phrase Match × 12) + (Word Position Bonus)
+
+//ts_rank_cd — Cover Density Ranking (Score nikalna)
+// Yeh score batata hai ki query ka “density” kitni hai.
+// ts_rank: Yeh sirf count karta hai ki word kitni baar aaya (Term Frequency).
+// ts_rank_cd (Cover Density): Yeh check karta hai ki query ke words document ke andar ek-dusre ke kitne paas (close together) hain!
+
+
+// Mukammal SQL Query 
   const sparseQuery = sql`
     SELECT 
       id,
@@ -76,12 +107,24 @@ export async function searchHybridChunks(
     score: number | string;
   }
 
+  // densrow - databse se aane wale Top 10 chunks jo Vector/Semantic similarity (<=>) se match huye.
+  // sparerow -Database se aane wale Top 10 chunks jo BM25 / Keyword match (ts_rank_cd) se match huye.
+
   const denseRows = (denseRes.rows || []) as unknown as QueryRow[];
   const sparseRows = (sparseRes.rows || []) as unknown as QueryRow[];
 
   // 3. Reciprocal Rank Fusion (RRF with k=60)
+  // Reciprocal Rank Fusion (RRF) — Dono Ranking Ko Mix Karna
+
+  // Formula: Final Score = Σ (1 / (k + rank))
+  // Yahan k = 60 (Constant), jo dono ranking ke difference ko balance karta hai.
+
+
+
   const RRF_K = 60;
   const chunkMap = new Map<string, RankedChunk>();
+
+
 
   // Map Dense ranks
   denseRows.forEach((row, idx) => {
@@ -108,10 +151,11 @@ export async function searchHybridChunks(
     const rrfIncrement = 1 / (RRF_K + rank);
 
     if (chunkMap.has(row.id)) {
+      //JACKPOT! Yeh chunk DENSE me bhi tha aur SPARSE me bhi hai!
       const existing = chunkMap.get(row.id)!;
       existing.sparseRank = rank;
       existing.sparseScore = sparseScore;
-      existing.rrfScore += rrfIncrement;
+      existing.rrfScore += rrfIncrement; // score double ho gaya --> BEST RESULT
     } else {
       chunkMap.set(row.id, {
         id: row.id,

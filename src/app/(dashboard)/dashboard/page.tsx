@@ -42,7 +42,7 @@ export default async function DashboardPage() {
 
   const allTools = [
     {
-      title: "🧠 Document RAG Engine",
+      title: "Document RAG Engine",
       description: "Flagship hybrid vector + BM25 search with interactive PDF citations.",
       icon: Cpu,
       gradient: "from-[#F43F5E] to-[#E11D48]",
@@ -50,7 +50,7 @@ export default async function DashboardPage() {
       badge: "Flagship",
     },
     {
-      title: "✍️ AI Article Studio",
+      title: "AI Article Studio",
       description: "Claude Artifacts-style split-pane editor with 1-click AI refactors.",
       icon: SquarePen,
       gradient: "from-[#3588F2] to-[#0BB0D7]",
@@ -58,7 +58,7 @@ export default async function DashboardPage() {
       badge: "Artifacts",
     },
     {
-      title: "🎨 Inpainting Canvas",
+      title: "Inpainting Canvas",
       description: "HTML5 brush tool for generative object removal and replacements.",
       icon: Scissors,
       gradient: "from-[#0D9488] to-[#10B981]",
@@ -66,28 +66,28 @@ export default async function DashboardPage() {
       badge: "Canvas",
     },
     {
-      title: "🏷️ Blog Title Generator",
+      title: "Blog Title Generator",
       description: "Generate 10 catchy headline ideas for blogs & social posts.",
       icon: Hash,
       gradient: "from-[#F43F5E] to-[#FB923C]",
       href: "/studio/blog-titles",
     },
     {
-      title: "🖼️ AI Image Generation",
+      title: "AI Image Generation",
       description: "Create photorealistic visuals & artwork with Cloudinary CDN.",
       icon: ImageIcon,
       gradient: "from-[#20C363] to-[#11B97E]",
       href: "/studio/image",
     },
     {
-      title: "🧹 Background Removal",
+      title: "Background Removal",
       description: "Isolate subjects and download clean transparent PNGs.",
       icon: Eraser,
       gradient: "from-[#F76C1C] to-[#F04A3C]",
       href: "/studio/remove-background",
     },
     {
-      title: "📄 Resume ATS Reviewer",
+      title: "Resume ATS Reviewer",
       description: "PDF parsing with ATS scoring and line-by-line bullet fixes.",
       icon: FileText,
       gradient: "from-[#12B7AC] to-[#08B6CE]",

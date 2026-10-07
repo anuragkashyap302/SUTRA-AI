@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { PDFParse } from "pdf-parse";
+import { PDFParse } from "@/lib/pdf";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { documents, documentChunks } from "@/db/schema";

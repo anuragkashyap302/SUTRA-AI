@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
-import { ai, DEFAULT_AI_MODEL } from "@/lib/ai";
+import { ai, DEFAULT_AI_MODEL, generateContentWithFallback } from "@/lib/ai";
 import { db } from "@/db";
 import { creations } from "@/db/schema";
-import { deductUserCredits } from "@/lib/auth";
+import { deductUserCredits, refundUserCredits } from "@/lib/auth";
 
 // Request Body Validation Schema with tone, targetAudience and keywords
 const generateArticleSchema = z.object({
@@ -32,7 +32,9 @@ export async function POST(req: NextRequest) {
         { status: 401 }
       );
     }
-
+    // you cannot get req.body in next js 15 use req.json()
+  //  console.log(req.body);
+// Output: ReadableStream { locked: false, state: 'readable' }  (Yeh JSON object nahi hai!)
     const body = await req.json();
     const parsed = generateArticleSchema.safeParse(body);
 
@@ -74,9 +76,8 @@ FORMATTING REQUIREMENTS:
 5. Provide a strong, memorable conclusion with 2-3 actionable next steps.
 6. Output raw, clean GitHub-flavored Markdown only (no external commentary).`;
 
-    // Google Gemini Generation
-    const response = await ai.models.generateContent({
-      model: DEFAULT_AI_MODEL,
+    // Google Gemini Generation with automatic 503 retry and model fallback
+    const response = await generateContentWithFallback({
       contents: [
         {
           role: "user",
@@ -115,6 +116,17 @@ FORMATTING REQUIREMENTS:
     });
   } catch (error: unknown) {
     console.error("Article Generation Error:", error);
+
+    // Auto-refund user credit on upstream error so credits are never lost
+    try {
+      const { userId } = await auth();
+      if (userId) {
+        await refundUserCredits(userId, 1);
+      }
+    } catch (refundErr) {
+      console.warn("Failed to refund credit:", refundErr);
+    }
+
     const errorMessage = error instanceof Error ? error.message : "Internal server error";
     return NextResponse.json(
       { success: false, error: errorMessage },
